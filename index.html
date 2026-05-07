@@ -55,7 +55,7 @@
         <button class="path-card active" data-mode="bill" type="button">
           <span class="path-icon">🏠</span>
           <strong>Full home / electric bill</strong>
-          <small>Use your monthly bill or yearly kWh to size a rooftop or hybrid solar kit.</small>
+          <small>Use your monthly bill to size a rooftop or hybrid solar kit.</small>
         </button>
         <button class="path-card" data-mode="load" type="button">
           <span class="path-icon">🔌</span>
@@ -115,7 +115,7 @@
               <option value="rv">RV / camper</option>
               <option value="cabin" selected>Cabin / tiny home</option>
               <option value="shed">Shed / workshop</option>
-              <option value="home">Full off-grid home</option>
+              <option value="home">Home essentials / larger cabin</option>
               <option value="custom">Custom</option>
             </select>
           </label>
@@ -145,14 +145,14 @@
           <h3>Backup power sizing</h3>
           <label>What do you want to keep running?</label>
           <div class="check-grid" id="backupLoads">
-            <label><input type="checkbox" value="1800" checked data-surge="1200" /> Refrigerator</label>
-            <label><input type="checkbox" value="1200" checked data-surge="800" /> Freezer</label>
-            <label><input type="checkbox" value="600" checked data-surge="0" /> Lights</label>
-            <label><input type="checkbox" value="300" checked data-surge="0" /> Wi‑Fi / router</label>
-            <label><input type="checkbox" value="1200" data-surge="1800" /> Sump pump</label>
-            <label><input type="checkbox" value="1800" data-surge="2200" /> Well pump</label>
-            <label><input type="checkbox" value="5000" data-surge="2000" /> Window AC</label>
-            <label><input type="checkbox" value="1000" data-surge="0" /> Medical device</label>
+            <label><input type="checkbox" checked data-energy-wh="1800" data-running-watts="150" data-surge-watts="1200" /> Refrigerator</label>
+            <label><input type="checkbox" checked data-energy-wh="1200" data-running-watts="120" data-surge-watts="800" /> Freezer</label>
+            <label><input type="checkbox" checked data-energy-wh="600" data-running-watts="200" data-surge-watts="0" /> Lights</label>
+            <label><input type="checkbox" checked data-energy-wh="300" data-running-watts="25" data-surge-watts="0" /> Wi‑Fi / router</label>
+            <label><input type="checkbox" data-energy-wh="1200" data-running-watts="800" data-surge-watts="1800" /> Sump pump</label>
+            <label><input type="checkbox" data-energy-wh="1800" data-running-watts="1200" data-surge-watts="2200" /> Well pump</label>
+            <label><input type="checkbox" data-energy-wh="5000" data-running-watts="900" data-surge-watts="2000" /> Window AC</label>
+            <label><input type="checkbox" data-energy-wh="1000" data-running-watts="100" data-surge-watts="0" /> Medical device</label>
           </div>
           <div class="two-col">
             <label>Outage target (hours)
@@ -175,11 +175,12 @@
           <h3 id="resultTitle">Home solar estimate</h3>
           <div class="result-grid" id="resultGrid"></div>
           <div class="recommendation" id="recommendation"></div>
+          <div class="assumptions-box" id="assumptionsUsed"></div>
           <div class="shopping-list">
             <h4>Suggested equipment categories</h4>
             <ul id="shoppingList"></ul>
           </div>
-          <p class="disclaimer">Prototype estimate only. Final systems should be checked against local code, equipment specs, surge loads, temperature, wire sizing, permits, and utility requirements.</p>
+          <p class="disclaimer">Prototype estimate only. Assumes rough average daily use, selected peak sun hours, and simple loss factors. Final systems should be checked against local code, equipment specs, simultaneous loads, surge loads, temperature, wire sizing, permits, and utility requirements.</p>
         </aside>
       </div>
     </section>
