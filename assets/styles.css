@@ -33,7 +33,7 @@ a { color: inherit; }
   border-bottom: 1px solid rgba(220, 231, 223, .75);
 }
 .brand { display: inline-flex; align-items: center; text-decoration: none; }
-.brand img { display: block; width: min(260px, 54vw); height: auto; filter: drop-shadow(0 8px 18px rgba(6, 59, 44, .12)); }
+.brand img { display: block; width: min(330px, 58vw); height: auto; filter: drop-shadow(0 8px 18px rgba(6, 59, 44, .12)); }
 nav { display: flex; gap: 18px; color: var(--muted); font-size: 14px; }
 nav a { text-decoration: none; }
 nav a:hover { color: var(--leaf); }
