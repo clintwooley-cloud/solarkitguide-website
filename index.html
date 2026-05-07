@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SolarKitGuide — Free Solar Kit Sizing Calculator</title>
+  <meta name="description" content="Estimate the solar panels, batteries, inverter, and kit size you need for home backup, RVs, cabins, and off-grid power." />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="SolarKitGuide home">
+      <span class="brand-mark">☀</span>
+      <span>SolarKitGuide</span>
+    </a>
+    <nav>
+      <a href="#calculator">Calculator</a>
+      <a href="#guides">Guides</a>
+      <a href="#partners">Equipment</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Free solar sizing tool</p>
+        <h1>Size the right solar kit before you buy the wrong one.</h1>
+        <p class="lead">Estimate your solar panels, battery bank, inverter, and system voltage for home backup, RVs, cabins, and DIY off-grid builds.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#calculator">Start calculator</a>
+          <a class="button secondary" href="#how-it-works">See how it works</a>
+        </div>
+        <p class="trust-note">No installer sales pressure. No magic numbers. Just practical sizing ranges and a shopping-list style result.</p>
+      </div>
+      <aside class="hero-card" aria-label="Example calculator result">
+        <div class="mini-label">Example result</div>
+        <h2>Cabin starter system</h2>
+        <div class="result-grid compact">
+          <div><strong>2.4 kWh</strong><span>daily use</span></div>
+          <div><strong>800–1,000W</strong><span>solar panels</span></div>
+          <div><strong>6–8 kWh</strong><span>LiFePO₄ battery</span></div>
+          <div><strong>3,000W</strong><span>inverter</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="calculator" class="calculator-shell">
+      <div class="section-heading">
+        <p class="eyebrow">Prototype calculator</p>
+        <h2>What are you trying to size?</h2>
+        <p>Pick the path closest to your situation. We can combine these later, but this keeps the first version simple and beginner-friendly.</p>
+      </div>
+
+      <div class="mode-tabs" role="tablist" aria-label="Calculator modes">
+        <button class="tab active" data-mode="bill" type="button">I know my electric bill</button>
+        <button class="tab" data-mode="load" type="button">I know what I want to power</button>
+        <button class="tab" data-mode="backup" type="button">I want backup power</button>
+      </div>
+
+      <div class="calculator-layout">
+        <form id="bill-form" class="calc-form mode active" data-mode="bill">
+          <h3>Home bill / rooftop solar</h3>
+          <label>Monthly electric bill ($)
+            <input type="number" id="billMonthly" value="220" min="0" step="10" />
+          </label>
+          <label>Estimated electricity rate ($/kWh)
+            <input type="number" id="billRate" value="0.16" min="0.01" step="0.01" />
+          </label>
+          <label>Average peak sun hours
+            <select id="billSun">
+              <option value="3.5">Lower sun / northern climate — 3.5</option>
+              <option value="4.5" selected>Typical US average — 4.5</option>
+              <option value="5.5">High sun / southwest — 5.5</option>
+            </select>
+          </label>
+          <label>Target bill offset
+            <select id="billOffset">
+              <option value="0.5">50%</option>
+              <option value="0.75">75%</option>
+              <option value="1" selected>100%</option>
+              <option value="1.25">125%</option>
+            </select>
+          </label>
+          <label>System loss factor
+            <select id="billLoss">
+              <option value="1.15">Good conditions — 15%</option>
+              <option value="1.25" selected>Conservative — 25%</option>
+              <option value="1.35">Shade/snow/less ideal — 35%</option>
+            </select>
+          </label>
+        </form>
+
+        <form id="load-form" class="calc-form mode" data-mode="load">
+          <h3>Appliance / off-grid sizing</h3>
+          <label>Build type
+            <select id="loadType">
+              <option value="rv">RV / camper</option>
+              <option value="cabin" selected>Cabin / tiny home</option>
+              <option value="shed">Shed / workshop</option>
+              <option value="home">Full off-grid home</option>
+              <option value="custom">Custom</option>
+            </select>
+          </label>
+          <div class="appliance-toolbar">
+            <button type="button" class="small" data-preset="cabin">Load cabin preset</button>
+            <button type="button" class="small" data-preset="rv">Load RV preset</button>
+            <button type="button" class="small ghost" id="addAppliance">Add appliance</button>
+          </div>
+          <div class="appliance-table" id="applianceRows" aria-live="polite"></div>
+          <div class="two-col">
+            <label>Days of autonomy
+              <input type="number" id="autonomyDays" value="2" min="0.5" step="0.5" />
+            </label>
+            <label>Peak sun hours
+              <input type="number" id="loadSun" value="4.5" min="1" step="0.25" />
+            </label>
+          </div>
+          <label>Battery chemistry
+            <select id="batteryChem">
+              <option value="0.8" selected>LiFePO₄ — use 80%</option>
+              <option value="0.5">Lead acid / AGM — use 50%</option>
+            </select>
+          </label>
+        </form>
+
+        <form id="backup-form" class="calc-form mode" data-mode="backup">
+          <h3>Backup power sizing</h3>
+          <label>What do you want to keep running?</label>
+          <div class="check-grid" id="backupLoads">
+            <label><input type="checkbox" value="1800" checked data-surge="1200" /> Refrigerator</label>
+            <label><input type="checkbox" value="1200" checked data-surge="800" /> Freezer</label>
+            <label><input type="checkbox" value="600" checked data-surge="0" /> Lights</label>
+            <label><input type="checkbox" value="300" checked data-surge="0" /> Wi‑Fi / router</label>
+            <label><input type="checkbox" value="1200" data-surge="1800" /> Sump pump</label>
+            <label><input type="checkbox" value="1800" data-surge="2200" /> Well pump</label>
+            <label><input type="checkbox" value="5000" data-surge="2000" /> Window AC</label>
+            <label><input type="checkbox" value="1000" data-surge="0" /> Medical device</label>
+          </div>
+          <div class="two-col">
+            <label>Outage target (hours)
+              <input type="number" id="backupHours" value="24" min="1" step="1" />
+            </label>
+            <label>Solar recharge?
+              <select id="backupSolar">
+                <option value="0">No / battery only</option>
+                <option value="1" selected>Yes, add solar</option>
+              </select>
+            </label>
+          </div>
+          <label>Peak sun hours if recharging
+            <input type="number" id="backupSun" value="4.5" min="1" step="0.25" />
+          </label>
+        </form>
+
+        <aside class="results-panel" aria-live="polite">
+          <p class="mini-label">Your estimate</p>
+          <h3 id="resultTitle">Home solar estimate</h3>
+          <div class="result-grid" id="resultGrid"></div>
+          <div class="recommendation" id="recommendation"></div>
+          <div class="shopping-list">
+            <h4>Suggested equipment categories</h4>
+            <ul id="shoppingList"></ul>
+          </div>
+          <p class="disclaimer">Prototype estimate only. Final systems should be checked against local code, equipment specs, surge loads, temperature, wire sizing, permits, and utility requirements.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="cards-section">
+      <div class="section-heading">
+        <p class="eyebrow">Design idea</p>
+        <h2>A calculator that explains the answer</h2>
+      </div>
+      <div class="cards">
+        <article><h3>1. Start with intent</h3><p>Home bill, appliance loads, or backup essentials. Different buyers need different math and different products.</p></article>
+        <article><h3>2. Show sizing ranges</h3><p>Give practical ranges for solar watts, battery kWh, inverter watts, and 12V/24V/48V system voltage.</p></article>
+        <article><h3>3. Turn math into a shopping list</h3><p>Translate the result into equipment categories and later add affiliate product cards by size tier.</p></article>
+      </div>
+    </section>
+
+    <section id="guides" class="guide-section">
+      <div>
+        <p class="eyebrow">SEO content map</p>
+        <h2>First guides to build around the calculator</h2>
+      </div>
+      <ul class="guide-list">
+        <li>Solar Kit Size Calculator</li>
+        <li>Off-Grid Solar Calculator</li>
+        <li>Battery Bank Calculator</li>
+        <li>Inverter Size Calculator</li>
+        <li>Solar Generator vs DIY Solar Kit</li>
+        <li>Best Solar Kits for Cabins</li>
+      </ul>
+    </section>
+
+    <section id="partners" class="partner-section">
+      <p class="eyebrow">Affiliate-ready structure</p>
+      <h2>Equipment recommendations will be added by result tier.</h2>
+      <p>For the prototype, recommendations are neutral categories. Once affiliate accounts are approved, we can map each result to partners like A1 SolarStore, Signature Solar, Renogy, EcoFlow, BLUETTI, Anker SOLIX, Current Connected, RICH SOLAR, and LiTime.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <strong>SolarKitGuide</strong>
+    <span>Free calculators and practical buying guides for DIY solar power.</span>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
