@@ -63,6 +63,67 @@ function setResults(title, items, recommendation, shopping, assumptions = []) {
   }
 }
 
+function diagramStep(icon, title, detail) {
+  return `<div class="diagram-step"><div class="diagram-icon">${icon}</div><strong>${title}</strong><span>${detail}</span></div>`;
+}
+function componentPill(label) { return `<span class="component-pill">${label}</span>`; }
+function wiringRow(prefix, count, label) {
+  return `<div class="string-row"><span>${prefix}</span>${Array.from({ length: Math.max(1, count) }, (_, i) => `${componentPill(label + (count > 1 ? ' ' + (i + 1) : ''))}${i < count - 1 ? '<span class="plus-link">+</span>' : ''}`).join('')}</div>`;
+}
+function batteryWiring(voltage, batteryKwh) {
+  const series = voltage === '48V' ? 4 : voltage === '24V' ? 2 : 1;
+  const batteryUnitKwh = 1.28; // common 12.8V 100Ah LiFePO4 reference size
+  const totalNeeded = Math.max(series, Math.ceil((batteryKwh || batteryUnitKwh) / batteryUnitKwh));
+  const parallel = Math.max(1, Math.ceil(totalNeeded / series));
+  const total = series * parallel;
+  const rows = Array.from({ length: parallel }, (_, i) => wiringRow(`String ${i + 1}:`, series, '12V batt')).join('');
+  const seriesText = series === 1 ? 'one 12V battery per string' : `${series} batteries in series per string`;
+  const parallelText = parallel === 1 ? 'one string' : `${parallel} parallel strings`;
+  return `<h5>Battery bank wiring</h5><p>Example: <strong>${voltage}</strong> bank using about <strong>${total}</strong> common 12V LiFePO₄ batteries — ${seriesText}, ${parallelText}.</p><div class="string-visual">${rows}</div><div class="diagram-note">Series raises voltage. Parallel raises capacity. Final battery count depends on the exact battery model and BMS limits.</div>`;
+}
+function panelWiring(arrayW, voltage, enabled = true) {
+  if (!enabled || !arrayW) return `<h5>Solar panel wiring</h5><p>No solar array selected for this estimate.</p><div class="diagram-note">If you add solar recharge later, panel stringing should be matched to the charge controller input voltage and current limits.</div>`;
+  const panelW = 400;
+  const count = Math.max(1, Math.ceil(arrayW / panelW));
+  const series = voltage === '48V' ? Math.min(4, count) : voltage === '24V' ? Math.min(2, count) : 1;
+  const parallel = Math.max(1, Math.ceil(count / series));
+  const rows = Array.from({ length: parallel }, (_, i) => wiringRow(`String ${i + 1}:`, Math.min(series, count - (i * series)), 'panel')).join('');
+  return `<h5>Solar panel wiring</h5><p>Example: about <strong>${count}</strong> × ${panelW}W panels. A common starting point is <strong>${series}S${parallel}P</strong> into an MPPT charge controller.</p><div class="string-visual">${rows}</div><div class="diagram-note">Panel stringing depends on panel Voc/Vmp, cold weather, controller limits, and wire distance. Treat this as a visual concept, not a final wiring plan.</div>`;
+}
+function setVisualPlan({ mode, arrayW = 0, batteryKwh = 0, inverterW = 0, voltage = '48V', solar = true }) {
+  const stepsByMode = {
+    bill: [
+      ['☀️', 'Solar panels', arrayW ? `${watts(arrayW)} array` : 'Rooftop or ground mount'],
+      ['🔁', 'Grid/hybrid inverter', 'Converts solar to home power'],
+      ['🏠', 'Home loads', 'Offsets daily usage'],
+      ['⚡', 'Utility grid', 'Net metering / backup rules vary']
+    ],
+    load: [
+      ['☀️', 'Solar panels', arrayW ? `${watts(arrayW)} array` : 'Solar array'],
+      ['📟', 'MPPT controller', `${voltage} charging path`],
+      ['🔋', 'Battery bank', batteryKwh ? `${kwh(batteryKwh)} nominal` : 'Stores energy'],
+      ['🔌', 'Inverter + loads', `${watts(inverterW)} class`]
+    ],
+    backup: solar ? [
+      ['☀️', 'Solar recharge', arrayW ? `${watts(arrayW)} array` : 'Optional array'],
+      ['🔋', 'Battery bank', batteryKwh ? `${kwh(batteryKwh)} nominal` : 'Stores outage power'],
+      ['🔌', 'Inverter', `${watts(inverterW)} class`],
+      ['🏠', 'Critical loads', 'Fridge, lights, pumps, router']
+    ] : [
+      ['🔋', 'Battery bank', batteryKwh ? `${kwh(batteryKwh)} nominal` : 'Stores outage power'],
+      ['🔌', 'Inverter', `${watts(inverterW)} class`],
+      ['🏠', 'Critical loads', 'Fridge, lights, pumps, router'],
+      ['🔄', 'Recharge source', 'Wall or generator recharge']
+    ]
+  };
+  const steps = stepsByMode[mode] || stepsByMode.load;
+  $('#systemDiagram').innerHTML = steps.map(([icon, title, detail]) => diagramStep(icon, title, detail)).join('');
+  $('#batteryDiagram').innerHTML = mode === 'bill'
+    ? `<h5>Battery option</h5><p>Grid-tie home solar may not require batteries. If backup power is a goal, add a hybrid inverter and battery bank sized around critical loads.</p><div class="diagram-note">Battery wiring depends on the chosen battery system and inverter voltage.</div>`
+    : batteryWiring(voltage, batteryKwh);
+  $('#panelDiagram').innerHTML = panelWiring(arrayW, voltage, mode !== 'backup' || solar);
+}
+
 function calculateBill() {
   const monthly = +$('#billMonthly').value || 0;
   const rate = +$('#billRate').value || 0.16;
@@ -95,6 +156,7 @@ function calculateBill() {
     'Panel estimate assumes 400W-class panels',
     'Bill method may include fixed fees/taxes, so exact kWh is better when available'
   ]);
+  setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, inverterW: roundedKw * 1000, voltage: systemVoltage(roundedKw * 1000, roundedKw * 1000) });
 }
 
 function renderAppliances(rows = presets.cabin) {
@@ -151,6 +213,7 @@ function calculateLoad() {
     'Solar array includes a 25% production/loss buffer',
     'Inverter class considers largest load plus a simultaneous-load allowance'
   ]);
+  setVisualPlan({ mode: 'load', arrayW, batteryKwh, inverterW, voltage });
 }
 
 function calculateBackup() {
@@ -184,6 +247,7 @@ function calculateBackup() {
     `Largest startup surge allowance: ${watts(surgeWatts)}`,
     solar ? `Solar recharge assumes ${sun} peak sun hours and a 30% buffer` : 'Solar recharge disabled'
   ]);
+  setVisualPlan({ mode: 'backup', arrayW, batteryKwh, inverterW, voltage: portable ? '24V' : '48V', solar: Boolean(solar) });
 }
 
 function activeMode() { return $('.mode.active').dataset.mode; }

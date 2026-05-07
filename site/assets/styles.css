@@ -167,3 +167,26 @@ button.ghost { background: white; border: 1px solid var(--line); }
 .related-card a { color: var(--leaf-dark); font-weight: 800; }
 .article-page article { max-width: 980px; margin: 0 auto; }
 .toc-card { border-left: 6px solid var(--sun); }
+.visual-plan { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.visual-plan h4 { margin: 0 0 12px; }
+.system-diagram { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; align-items: stretch; margin-bottom: 12px; }
+.diagram-step { position: relative; padding: 12px 10px; border: 1px solid #cfe8dc; border-radius: 16px; background: #f6faf8; text-align: center; min-height: 92px; display: grid; align-content: center; gap: 4px; }
+.diagram-step:not(:last-child)::after { content: '→'; position: absolute; right: -13px; top: 50%; transform: translateY(-50%); color: var(--leaf); font-weight: 900; z-index: 1; }
+.diagram-icon { font-size: 24px; line-height: 1; }
+.diagram-step strong { display: block; font-size: 13px; color: var(--leaf-dark); }
+.diagram-step span { display: block; color: var(--muted); font-size: 11px; line-height: 1.35; }
+.wiring-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wiring-card { border: 1px solid var(--line); border-radius: 16px; background: #fffdf7; padding: 12px; }
+.wiring-card h5 { margin: 0 0 6px; font-size: 14px; letter-spacing: -.02em; }
+.wiring-card p { margin: 0 0 8px; color: #36584d; font-size: 12px; line-height: 1.45; }
+.string-visual { display: grid; gap: 6px; }
+.string-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; font-size: 11px; color: var(--muted); }
+.component-pill { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; min-height: 26px; padding: 4px 7px; border-radius: 10px; background: var(--mint); border: 1px solid #cfe8dc; color: var(--leaf-dark); font-weight: 850; font-size: 11px; }
+.plus-link { color: var(--leaf); font-weight: 900; }
+.diagram-note { margin-top: 8px; color: var(--muted); font-size: 11px; line-height: 1.35; }
+@media (max-width: 620px) {
+  .system-diagram, .wiring-grid { grid-template-columns: 1fr; }
+  .diagram-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -15px; transform: translateX(-50%); }
+}
+.results-panel .system-diagram, .results-panel .wiring-grid { grid-template-columns: 1fr; }
+.results-panel .diagram-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -15px; transform: translateX(-50%); }
