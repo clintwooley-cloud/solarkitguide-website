@@ -1,0 +1,10 @@
+<svg width="315" height="82" viewBox="0 0 315 82" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+<title id="title">SolarKitGuide shield logo</title>
+<path d="M39 4l32 12v22c0 20-13 33-32 40C20 71 7 58 7 38V16L39 4Z" fill="#063B2C"/>
+<circle cx="34" cy="29" r="13" fill="#F8B931"/>
+<path d="M20 49h39l-6 14H25l-5-14Z" fill="#0D6B4F" stroke="#E7F5EE" stroke-width="2"/>
+<path d="M28 50l2 12M39 50v12M50 50l-2 12M23 56h33" stroke="#B9E2D2" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M51 20l-9 14h10L42 50" stroke="#FFF8D8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="89" y="36" fill="#10231D" font-family="Inter,Arial,sans-serif" font-size="29" font-weight="950" letter-spacing="-1.4">SolarKit</text>
+<text x="90" y="61" fill="#0D6B4F" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="850" letter-spacing="-.7">Guide</text>
+</svg>
