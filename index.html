@@ -29,6 +29,7 @@
         <p class="lead">Estimate your solar panels, battery bank, inverter, and system voltage for home backup, RVs, cabins, and DIY off-grid builds.</p>
         <div class="hero-actions">
           <a class="button primary" href="#calculator">Start calculator</a>
+          <a class="button secondary" href="guides/">Read the guides</a>
           <a class="button secondary" href="#how-it-works">See how it works</a>
         </div>
         <p class="trust-note">No installer sales pressure. No magic numbers. Just practical sizing ranges and a shopping-list style result.</p>
@@ -47,7 +48,7 @@
 
     <section id="calculator" class="calculator-shell">
       <div class="section-heading">
-        <p class="eyebrow">Prototype calculator</p>
+        <p class="eyebrow">Solar sizing calculator</p>
         <h2>What are you trying to size?</h2>
         <p>Pick the path closest to your situation. We can combine these later, but this keeps the first version simple and beginner-friendly.</p>
       </div>
@@ -181,27 +182,35 @@
             <h4>Suggested equipment categories</h4>
             <ul id="shoppingList"></ul>
           </div>
-          <p class="disclaimer">Prototype estimate only. Assumes rough average daily use, selected peak sun hours, and simple loss factors. Final systems should be checked against local code, equipment specs, simultaneous loads, surge loads, temperature, wire sizing, permits, and utility requirements.</p>
+          <div class="visual-plan" id="visualPlan">
+            <h4>Visual setup guide</h4>
+            <div class="system-diagram" id="systemDiagram"></div>
+            <div class="wiring-grid">
+              <div class="wiring-card" id="batteryDiagram"></div>
+              <div class="wiring-card" id="panelDiagram"></div>
+            </div>
+          </div>
+          <p class="disclaimer">Planning estimate only. Diagrams are simplified learning visuals, not final wiring plans. Final systems should be checked against local code, equipment specs, simultaneous loads, surge loads, temperature, wire sizing, fusing, disconnects, permits, and utility requirements.</p>
         </aside>
       </div>
     </section>
 
     <section id="how-it-works" class="cards-section">
       <div class="section-heading">
-        <p class="eyebrow">Design idea</p>
+        <p class="eyebrow">How SolarKitGuide helps</p>
         <h2>A calculator that explains the answer</h2>
       </div>
       <div class="cards">
-        <article><h3>1. Start with intent</h3><p>Home bill, appliance loads, or backup essentials. Different buyers need different math and different products.</p></article>
-        <article><h3>2. Show sizing ranges</h3><p>Give practical ranges for solar watts, battery kWh, inverter watts, and 12V/24V/48V system voltage.</p></article>
-        <article><h3>3. Turn math into a shopping list</h3><p>Translate the result into equipment categories and later add affiliate product cards by size tier.</p></article>
+        <article><h3>1. Start with your goal</h3><p>Home bill, appliance loads, or backup essentials. Different projects need different math and different equipment.</p></article>
+        <article><h3>2. See realistic sizing ranges</h3><p>Get practical estimates for solar watts, battery kWh, inverter watts, and 12V/24V/48V system voltage.</p></article>
+        <article><h3>3. Understand what to compare</h3><p>Use the result to compare panels, batteries, inverters, charge controllers, and kits with more confidence.</p></article>
       </div>
     </section>
 
     <section id="guides" class="guide-section">
       <div>
-        <p class="eyebrow">SEO content map</p>
-        <h2>First guides to build around the calculator</h2>
+        <p class="eyebrow">Beginner solar guides</p>
+        <h2>Start here if you are comparing solar kits, batteries, or inverters.</h2>
       </div>
       <ul class="guide-list">
         <li><a href="solar-kit-size-calculator/">Solar Kit Size Calculator</a></li>
@@ -214,9 +223,9 @@
     </section>
 
     <section id="partners" class="partner-section">
-      <p class="eyebrow">Affiliate-ready structure</p>
-      <h2>Equipment recommendations will be added by result tier.</h2>
-      <p>For the prototype, recommendations are neutral categories. Once affiliate accounts are approved, we can map each result to partners like A1 SolarStore, Signature Solar, Renogy, EcoFlow, BLUETTI, Anker SOLIX, Current Connected, RICH SOLAR, and LiTime.</p>
+      <p class="eyebrow">Equipment research</p>
+      <h2>Recommendations should match the system size — not just the biggest sale.</h2>
+      <p>SolarKitGuide currently focuses on neutral sizing guidance and equipment categories. As we add product recommendations, the goal is to match panels, batteries, inverters, and kits to realistic use cases instead of pushing one-size-fits-all gear.</p>
     </section>
   </main>
 
