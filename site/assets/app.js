@@ -154,13 +154,14 @@ function bindInputs() {
   $$('.remove').forEach(btn => btn.onclick = () => { btn.closest('.appliance-row').remove(); calculateLoad(); });
 }
 
-$$('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    $$('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    $$('.mode').forEach(form => form.classList.toggle('active', form.dataset.mode === tab.dataset.mode));
-    calculate();
-  });
+function switchMode(mode) {
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+  $$('.path-card').forEach(card => card.classList.toggle('active', card.dataset.mode === mode));
+  $$('.mode').forEach(form => form.classList.toggle('active', form.dataset.mode === mode));
+  calculate();
+}
+$$('.tab, .path-card').forEach(control => {
+  control.addEventListener('click', () => switchMode(control.dataset.mode));
 });
 $$('[data-preset]').forEach(btn => btn.addEventListener('click', () => renderAppliances(presets[btn.dataset.preset])));
 $('#addAppliance').addEventListener('click', () => {

@@ -51,15 +51,33 @@
         <p>Pick the path closest to your situation. We can combine these later, but this keeps the first version simple and beginner-friendly.</p>
       </div>
 
+      <div class="calculator-paths" aria-label="Choose calculator type">
+        <button class="path-card active" data-mode="bill" type="button">
+          <span class="path-icon">🏠</span>
+          <strong>Full home / electric bill</strong>
+          <small>Use your monthly bill or yearly kWh to size a rooftop or hybrid solar kit.</small>
+        </button>
+        <button class="path-card" data-mode="load" type="button">
+          <span class="path-icon">🔌</span>
+          <strong>Off-grid appliances</strong>
+          <small>Build a load list for RVs, cabins, tiny homes, sheds, or custom systems.</small>
+        </button>
+        <button class="path-card" data-mode="backup" type="button">
+          <span class="path-icon">🔋</span>
+          <strong>Backup power</strong>
+          <small>Choose essentials to keep running during outages and size battery backup.</small>
+        </button>
+      </div>
+
       <div class="mode-tabs" role="tablist" aria-label="Calculator modes">
-        <button class="tab active" data-mode="bill" type="button">I know my electric bill</button>
-        <button class="tab" data-mode="load" type="button">I know what I want to power</button>
-        <button class="tab" data-mode="backup" type="button">I want backup power</button>
+        <button class="tab active" data-mode="bill" type="button">🏠 Full home / bill</button>
+        <button class="tab" data-mode="load" type="button">🔌 Appliance loads</button>
+        <button class="tab" data-mode="backup" type="button">🔋 Backup power</button>
       </div>
 
       <div class="calculator-layout">
         <form id="bill-form" class="calc-form mode active" data-mode="bill">
-          <h3>Home bill / rooftop solar</h3>
+          <h3>Full home solar from electric bill</h3>
           <label>Monthly electric bill ($)
             <input type="number" id="billMonthly" value="220" min="0" step="10" />
           </label>
