@@ -159,3 +159,11 @@ button.ghost { background: white; border: 1px solid var(--line); }
 .article-grid span { color: var(--muted); line-height: 1.5; }
 .guide-list a, .site-footer a { color: inherit; }
 @media(max-width: 760px){ .article-grid { grid-template-columns: 1fr; } }
+.assumptions-box { margin-top: 16px; padding: 14px 16px; border-radius: 16px; background: #f6faf8; border: 1px solid var(--line); color: #36584d; }
+.assumptions-box:empty { display: none; }
+.assumptions-box h4 { margin: 0 0 8px; }
+.assumptions-box ul { margin: 0; padding-left: 18px; line-height: 1.55; font-size: 13px; }
+.formula-box { padding: 14px 16px; margin: 16px 0; border-radius: 16px; background: var(--mint); border: 1px solid #cfe8dc; font-weight: 800; color: var(--leaf-dark); line-height: 1.6; }
+.related-card a { color: var(--leaf-dark); font-weight: 800; }
+.article-page article { max-width: 980px; margin: 0 auto; }
+.toc-card { border-left: 6px solid var(--sun); }
