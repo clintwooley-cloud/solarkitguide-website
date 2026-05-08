@@ -439,6 +439,22 @@ function updateBillMethod() {
   $('#homeLoadFields')?.classList.toggle('active', method === 'loads');
 }
 
+function setSunValue(field, value) {
+  const el = $(field);
+  if (!el) return;
+  if (el.tagName === 'SELECT' && !Array.from(el.options).some(option => option.value === value)) {
+    el.insertAdjacentHTML('beforeend', `<option value="${value}">Location estimate — ${value}</option>`);
+  }
+  el.value = value;
+}
+
+function applySunRegion() {
+  const value = $('#sunRegion')?.value;
+  if (!value || value === 'manual') return;
+  ['#billSun', '#evSun', '#loadSun', '#backupSun'].forEach(field => setSunValue(field, value));
+  calculate();
+}
+
 function switchMode(mode) {
   $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
   $$('.path-card').forEach(card => card.classList.toggle('active', card.dataset.mode === mode));
@@ -453,6 +469,7 @@ $$('[data-preset]').forEach(btn => btn.addEventListener('click', () => {
   renderAppliances(presets[btn.dataset.preset]);
 }));
 $('#loadType').addEventListener('change', e => renderAppliances(presets[e.target.value] || presets.custom));
+$('#sunRegion')?.addEventListener('change', applySunRegion);
 $('#billMethod')?.addEventListener('change', () => { updateBillMethod(); calculateBill(); });
 $$('[data-home-preset]').forEach(btn => btn.addEventListener('click', () => {
   renderHomeAppliances(presets[btn.dataset.homePreset] || presets.custom);
@@ -477,4 +494,5 @@ renderAppliances(presets.cabin);
 renderHomeAppliances(presets.home);
 bindInputs();
 updateBillMethod();
+applySunRegion();
 calculateBill();
