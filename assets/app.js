@@ -39,6 +39,39 @@ const presets = {
   ]
 };
 
+const applianceLibrary = {
+  custom: ['Custom load', 100, 100, 1],
+  refrigerator: ['Refrigerator', 150, 35, 24],
+  freezer: ['Freezer', 120, 35, 24],
+  'mini-fridge': ['Mini fridge', 65, 40, 24],
+  microwave: ['Microwave', 1200, 100, 0.25],
+  'coffee-maker': ['Coffee maker', 900, 100, 0.2],
+  'ceiling-fan': ['Ceiling fan', 60, 100, 8],
+  'box-fan': ['Box / portable fan', 75, 100, 6],
+  'window-ac-small': ['Window AC — small', 600, 60, 6],
+  'window-ac-large': ['Window AC — large', 1200, 60, 6],
+  'mini-split-9k': ['Mini split AC — 9k BTU', 700, 55, 8],
+  'mini-split-12k': ['Mini split AC — 12k BTU', 1100, 55, 8],
+  'central-ac': ['Central AC air handler + condenser', 3500, 55, 8],
+  'space-heater': ['Space heater', 1500, 100, 3],
+  'tv-small': ['TV — small LED', 60, 100, 4],
+  'tv-large': ['TV — large LED', 150, 100, 4],
+  laptop: ['Laptop', 65, 100, 4],
+  'desktop-computer': ['Desktop computer', 250, 100, 4],
+  'wifi-router': ['Wi‑Fi / router', 25, 100, 24],
+  'phone-charging': ['Phone / tablet charging', 25, 100, 3],
+  'washing-machine': ['Washing machine', 500, 50, 1],
+  'electric-dryer': ['Electric dryer', 5000, 100, 0.75],
+  'gas-dryer': ['Gas dryer motor', 500, 100, 0.75],
+  'well-pump': ['Well pump', 1200, 15, 1],
+  'sump-pump': ['Sump pump', 800, 15, 1],
+  'water-pump-small': ['Small water pump', 120, 15, 1],
+  'battery-chargers': ['Battery chargers', 180, 100, 2],
+  'circular-saw': ['Circular saw / power tool', 1200, 30, 0.5],
+  'air-compressor': ['Small air compressor', 900, 20, 0.5],
+  'shop-lights': ['LED shop lights', 80, 100, 4]
+};
+
 function roundUp(value, step) { return Math.ceil(value / step) * step; }
 function fmt(n, digits = 0) { return Number(n).toLocaleString(undefined, { maximumFractionDigits: digits }); }
 function kw(n) { return `${fmt(n, n < 10 ? 1 : 0)} kW`; }
@@ -277,7 +310,9 @@ $$('[data-preset]').forEach(btn => btn.addEventListener('click', () => {
 }));
 $('#loadType').addEventListener('change', e => renderAppliances(presets[e.target.value] || presets.custom));
 $('#addAppliance').addEventListener('click', () => {
-  $('#applianceRows').insertAdjacentHTML('beforeend', applianceRow(['Custom load', 100, 100, 1], Date.now()));
+  const selected = $('#appliancePicker')?.value || 'custom';
+  const row = applianceLibrary[selected] || applianceLibrary.custom;
+  $('#applianceRows').insertAdjacentHTML('beforeend', applianceRow(row, Date.now()));
   bindInputs();
   calculateLoad();
 });

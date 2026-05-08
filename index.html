@@ -124,7 +124,53 @@
           <div class="appliance-toolbar">
             <button type="button" class="small" data-preset="cabin">Load cabin preset</button>
             <button type="button" class="small" data-preset="rv">Load RV preset</button>
-            <button type="button" class="small ghost" id="addAppliance">Add appliance</button>
+          </div>
+          <div class="appliance-add-row">
+            <label>Add appliance or equipment
+              <select id="appliancePicker">
+                <option value="custom">Custom load</option>
+                <optgroup label="Kitchen & food storage">
+                  <option value="refrigerator">Refrigerator</option>
+                  <option value="freezer">Freezer</option>
+                  <option value="mini-fridge">Mini fridge</option>
+                  <option value="microwave">Microwave</option>
+                  <option value="coffee-maker">Coffee maker</option>
+                </optgroup>
+                <optgroup label="Comfort & climate">
+                  <option value="ceiling-fan">Ceiling fan</option>
+                  <option value="box-fan">Box / portable fan</option>
+                  <option value="window-ac-small">Window AC — small</option>
+                  <option value="window-ac-large">Window AC — large</option>
+                  <option value="mini-split-9k">Mini split AC — 9k BTU</option>
+                  <option value="mini-split-12k">Mini split AC — 12k BTU</option>
+                  <option value="central-ac">Central AC air handler + condenser</option>
+                  <option value="space-heater">Space heater</option>
+                </optgroup>
+                <optgroup label="Electronics">
+                  <option value="tv-small">TV — small LED</option>
+                  <option value="tv-large">TV — large LED</option>
+                  <option value="laptop">Laptop</option>
+                  <option value="desktop-computer">Desktop computer</option>
+                  <option value="wifi-router">Wi‑Fi / router</option>
+                  <option value="phone-charging">Phone / tablet charging</option>
+                </optgroup>
+                <optgroup label="Laundry & water">
+                  <option value="washing-machine">Washing machine</option>
+                  <option value="electric-dryer">Electric dryer</option>
+                  <option value="gas-dryer">Gas dryer motor</option>
+                  <option value="well-pump">Well pump</option>
+                  <option value="sump-pump">Sump pump</option>
+                  <option value="water-pump-small">Small water pump</option>
+                </optgroup>
+                <optgroup label="Tools & workshop">
+                  <option value="battery-chargers">Battery chargers</option>
+                  <option value="circular-saw">Circular saw / power tool</option>
+                  <option value="air-compressor">Small air compressor</option>
+                  <option value="shop-lights">LED shop lights</option>
+                </optgroup>
+              </select>
+            </label>
+            <button type="button" class="small ghost" id="addAppliance">Add selected item</button>
           </div>
           <div class="appliance-table" id="applianceRows" aria-live="polite"></div>
           <div class="two-col">
