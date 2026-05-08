@@ -69,12 +69,18 @@
           <strong>Backup power</strong>
           <small>Choose essentials to keep running during outages and size battery backup.</small>
         </button>
+        <button class="path-card" data-mode="ev" type="button">
+          <span class="path-icon">🚗</span>
+          <strong>EV charging</strong>
+          <small>Estimate the extra solar needed to charge an electric car from daily driving.</small>
+        </button>
       </div>
 
       <div class="mode-tabs" role="tablist" aria-label="Calculator modes">
         <button class="tab active" data-mode="bill" type="button">🏠 Full home / bill</button>
         <button class="tab" data-mode="load" type="button">🔌 Appliance loads</button>
         <button class="tab" data-mode="backup" type="button">🔋 Backup power</button>
+        <button class="tab" data-mode="ev" type="button">🚗 EV charging</button>
       </div>
 
       <div class="calculator-layout">
@@ -108,6 +114,49 @@
               <option value="1.35">Shade/snow/less ideal — 35%</option>
             </select>
           </label>
+        </form>
+
+        <form id="ev-form" class="calc-form mode" data-mode="ev">
+          <h3>Additional solar for EV charging</h3>
+          <label>Electric vehicle
+            <select id="evModel">
+              <option value="0.25">Tesla Model 3 / efficient sedan — 0.25 kWh/mi</option>
+              <option value="0.28" selected>Tesla Model Y / compact crossover — 0.28 kWh/mi</option>
+              <option value="0.29">Hyundai Ioniq 5 / Kia EV6 — 0.29 kWh/mi</option>
+              <option value="0.30">Nissan Leaf — 0.30 kWh/mi</option>
+              <option value="0.28">Chevy Bolt / Equinox EV — 0.28 kWh/mi</option>
+              <option value="0.34">Ford Mustang Mach-E — 0.34 kWh/mi</option>
+              <option value="0.36">Tesla Cybertruck / large SUV — 0.36 kWh/mi</option>
+              <option value="0.48">Ford F-150 Lightning / Rivian truck — 0.48 kWh/mi</option>
+              <option value="0.60">Large electric van / heavy truck — 0.60 kWh/mi</option>
+              <option value="0.33">Custom / unknown EV — 0.33 kWh/mi</option>
+            </select>
+          </label>
+          <div class="two-col">
+            <label>Average miles driven per day
+              <input type="number" id="evMiles" value="35" min="0" step="5" />
+            </label>
+            <label>Driving days per week
+              <input type="number" id="evDays" value="5" min="1" max="7" step="1" />
+            </label>
+          </div>
+          <div class="two-col">
+            <label>Average peak sun hours
+              <select id="evSun">
+                <option value="3.5">Lower sun / northern climate — 3.5</option>
+                <option value="4.5" selected>Typical US average — 4.5</option>
+                <option value="5.5">High sun / southwest — 5.5</option>
+              </select>
+            </label>
+            <label>Charging loss
+              <select id="evChargerLoss">
+                <option value="1.10">Efficient Level 2 — 10%</option>
+                <option value="1.15" selected>Typical home charging — 15%</option>
+                <option value="1.25">Cold weather / less ideal — 25%</option>
+              </select>
+            </label>
+          </div>
+          <p class="calc-help">EV efficiency varies with speed, weather, tires, terrain, and driving style. This estimates extra solar production for charging energy, not a complete electrical design for the charger circuit.</p>
         </form>
 
         <form id="load-form" class="calc-form mode" data-mode="load">

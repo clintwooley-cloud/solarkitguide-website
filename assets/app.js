@@ -131,6 +131,12 @@ function setVisualPlan({ mode, arrayW = 0, batteryKwh = 0, inverterW = 0, voltag
       ['🏠', 'Home loads', 'Offsets daily usage'],
       ['⚡', 'Utility grid', 'Net metering / backup rules vary']
     ],
+    ev: [
+      ['☀️', 'Additional solar', arrayW ? `${watts(arrayW)} extra array` : 'Extra production'],
+      ['🔁', 'Grid-tie / hybrid inverter', 'Offsets EV charging energy'],
+      ['🔌', 'EV charger', 'Level 2 home charging typical'],
+      ['🚗', 'Electric vehicle', 'Daily driving energy']
+    ],
     load: [
       ['☀️', 'Solar panels', arrayW ? `${watts(arrayW)} array` : 'Solar array'],
       ['📟', 'MPPT controller', `${voltage} charging path`],
@@ -153,7 +159,9 @@ function setVisualPlan({ mode, arrayW = 0, batteryKwh = 0, inverterW = 0, voltag
   $('#systemDiagram').innerHTML = steps.map(([icon, title, detail]) => diagramStep(icon, title, detail)).join('');
   $('#batteryDiagram').innerHTML = mode === 'bill'
     ? `<h5>Battery option</h5><p>Grid-tie home solar may not require batteries. If backup power is a goal, add a hybrid inverter and battery bank sized around critical loads.</p><div class="diagram-note">Battery wiring depends on the chosen battery system and inverter voltage.</div>`
-    : batteryWiring(voltage, batteryKwh);
+    : mode === 'ev'
+      ? `<h5>EV charging note</h5><p>This estimates extra solar production to offset EV charging. Most home EV charging still uses the home electrical panel and grid unless a larger hybrid/battery system is designed.</p><div class="diagram-note">A dedicated EV charger circuit should be installed and permitted by a qualified electrician.</div>`
+      : batteryWiring(voltage, batteryKwh);
   $('#panelDiagram').innerHTML = panelWiring(arrayW, voltage, mode !== 'backup' || solar);
 }
 
@@ -190,6 +198,45 @@ function calculateBill() {
     'Bill method may include fixed fees/taxes, so exact kWh is better when available'
   ]);
   setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, inverterW: roundedKw * 1000, voltage: systemVoltage(roundedKw * 1000, roundedKw * 1000) });
+}
+
+function calculateEV() {
+  const kwhPerMile = +$('#evModel').value || 0.33;
+  const milesPerDay = +$('#evMiles').value || 0;
+  const drivingDays = Math.min(7, Math.max(1, +$('#evDays').value || 7));
+  const sun = +$('#evSun').value || 4.5;
+  const chargerLoss = +$('#evChargerLoss').value || 1.15;
+  const solarLoss = 1.25;
+  const avgDailyMiles = milesPerDay * (drivingDays / 7);
+  const evDailyKwh = avgDailyMiles * kwhPerMile;
+  const wallDailyKwh = evDailyKwh * chargerLoss;
+  const arrayKw = (wallDailyKwh / sun) * solarLoss;
+  const roundedKw = roundUp(arrayKw, 0.1);
+  const panels400 = Math.ceil((roundedKw * 1000) / 400);
+  const annualChargingKwh = wallDailyKwh * 365;
+  const weeklyMiles = milesPerDay * drivingDays;
+  const level2Amps = wallDailyKwh > 18 ? '40A–48A' : wallDailyKwh > 10 ? '32A–40A' : '16A–32A';
+  setResults('EV charging solar add-on', [
+    [kwh(wallDailyKwh), 'extra charging energy per day'],
+    [kw(roundedKw), 'additional solar array'],
+    [`${panels400}`, 'approx. 400W panels'],
+    [`${fmt(annualChargingKwh)} kWh`, 'annual EV charging offset']
+  ], `For about <strong>${fmt(weeklyMiles)} miles/week</strong>, this EV would need roughly <strong>${kwh(wallDailyKwh)}</strong> per day from the wall after charging losses. In this sun setting, plan on about <strong>${kw(roundedKw)}</strong> of additional solar to offset that charging energy over time.`, [
+    `${kw(roundedKw)} additional solar panel capacity`,
+    `${panels400} × 400W-class panels`,
+    'Grid-tie or hybrid inverter capacity reviewed for the added production',
+    `Level 2 EV charger/circuit sizing often lands around ${level2Amps}, depending on vehicle and charging speed goal`,
+    'Monitoring app or smart charger to track EV charging energy',
+    'Optional battery only if charging during outages or off-grid is a goal'
+  ], [
+    `Vehicle efficiency: ${kwhPerMile} kWh/mile`,
+    `Average driving: ${fmt(avgDailyMiles, 1)} miles/day (${fmt(weeklyMiles)} miles/week)`,
+    `Charging loss: ${fmt((chargerLoss - 1) * 100)}%`,
+    `Peak sun hours: ${sun}`,
+    'Solar array includes a 25% production/loss buffer',
+    'This offsets energy over time; charging directly from solar in real time requires matching charger timing, inverter capacity, and utility/net-metering rules'
+  ]);
+  setVisualPlan({ mode: 'ev', arrayW: roundedKw * 1000, inverterW: roundedKw * 1000, voltage: systemVoltage(roundedKw * 1000, roundedKw * 1000), solar: true });
 }
 
 function renderAppliances(rows = presets.cabin) {
@@ -300,6 +347,7 @@ function calculate() {
   if (mode === 'bill') calculateBill();
   if (mode === 'load') calculateLoad();
   if (mode === 'backup') calculateBackup();
+  if (mode === 'ev') calculateEV();
 }
 function bindInputs() {
   $$('input, select').forEach(el => el.oninput = calculate);
