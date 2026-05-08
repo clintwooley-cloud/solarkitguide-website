@@ -89,6 +89,8 @@ h3 { font-size: 22px; letter-spacing: -.03em; }
 .calculator-layout { display: grid; grid-template-columns: minmax(0, .95fr) minmax(340px, .7fr); gap: 20px; align-items: start; }
 .calc-form { display: none; padding: 24px; }
 .calc-form.active { display: block; }
+.method-fields { display: none; }
+.method-fields.active { display: block; }
 label { display: grid; gap: 7px; margin: 14px 0; color: #29483e; font-weight: 750; font-size: 14px; }
 input, select {
   width: 100%;
