@@ -190,3 +190,7 @@ button.ghost { background: white; border: 1px solid var(--line); }
 }
 .results-panel .system-diagram, .results-panel .wiring-grid { grid-template-columns: 1fr; }
 .results-panel .diagram-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -15px; transform: translateX(-50%); }
+.appliance-add-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: end; margin: 8px 0 14px; padding: 12px; border: 1px solid var(--line); border-radius: 18px; background: #fbfdfb; }
+.appliance-add-row label { margin: 0; }
+.appliance-add-row button { margin-bottom: 0; white-space: nowrap; }
+@media (max-width: 620px) { .appliance-add-row { grid-template-columns: 1fr; } .appliance-add-row button { width: 100%; } }
