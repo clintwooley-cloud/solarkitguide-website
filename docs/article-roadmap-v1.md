@@ -16,6 +16,7 @@ Use custom-written articles as the long-term asset. Outside articles are useful 
 ## Next article topics
 
 - How Many Solar Panels Do I Need? — published as `/how-many-solar-panels-do-i-need/`
+- How Much Solar Power Do I Need to Charge My EV? — published as `/how-much-solar-power-do-i-need-to-charge-my-ev/`
 - How Many Batteries Do I Need for Solar?
 - 12V vs 24V vs 48V Solar Systems
 - LiFePO4 vs AGM Batteries for Solar
