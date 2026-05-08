@@ -186,6 +186,20 @@
               <option value="1.35">Shade/snow/less ideal — 35%</option>
             </select>
           </label>
+          <div class="two-col">
+            <label>Solar panel wattage
+              <input type="number" id="billPanelWatts" value="400" min="100" step="5" />
+            </label>
+            <label>Battery backup goal
+              <select id="billBatteryGoal">
+                <option value="none">No battery / grid-tie only</option>
+                <option value="essential" selected>Essential backup</option>
+                <option value="whole-home-half-day">Whole-home backup — 12 hours</option>
+                <option value="whole-home-one-day">Whole-home backup — 1 day</option>
+                <option value="whole-home-two-day">Whole-home backup — 2 days</option>
+              </select>
+            </label>
+          </div>
         </form>
 
         <form id="ev-form" class="calc-form mode" data-mode="ev">

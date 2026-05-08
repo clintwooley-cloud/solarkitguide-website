@@ -175,7 +175,9 @@ function setVisualPlan({ mode, arrayW = 0, batteryKwh = 0, inverterW = 0, voltag
   const steps = stepsByMode[mode] || stepsByMode.load;
   $('#systemDiagram').innerHTML = steps.map(([icon, title, detail]) => diagramStep(icon, title, detail)).join('');
   $('#batteryDiagram').innerHTML = mode === 'bill'
-    ? `<h5>Battery option</h5><p>Grid-tie home solar may not require batteries. If backup power is a goal, add a hybrid inverter and battery bank sized around critical loads.</p><div class="diagram-note">Battery wiring depends on the chosen battery system and inverter voltage.</div>`
+    ? batteryKwh > 0
+      ? `<h5>Battery backup target</h5><p>Planning target: about <strong>${kwh(batteryKwh)}</strong> nominal battery storage for the selected backup goal.</p><div class="diagram-note">Grid-tie home solar may not require batteries. Final storage size depends on critical loads, outage duration, chemistry, inverter limits, and code requirements.</div>`
+      : `<h5>Battery option</h5><p>Grid-tie home solar may not require batteries. If backup power is a goal, add a hybrid inverter and battery bank sized around critical loads.</p><div class="diagram-note">Battery wiring depends on the chosen battery system and inverter voltage.</div>`
     : mode === 'ev'
       ? `<h5>EV charging note</h5><p>This estimates extra solar production to offset EV charging. Most home EV charging still uses the home electrical panel and grid unless a larger hybrid/battery system is designed.</p><div class="diagram-note">A dedicated EV charger circuit should be installed and permitted by a qualified electrician.</div>`
       : batteryWiring(voltage, batteryKwh);
@@ -193,6 +195,18 @@ function loadStats(rows) {
   return { activeRows, dailyWh, dailyKwh, peakWatts, possibleRunningWatts, largestStartupWatts, worstStartupScenario };
 }
 
+function homeBatteryTarget(dailyKwh, goal) {
+  const usableFactor = 0.85;
+  const goals = {
+    none: { kwh: 0, label: 'No battery selected', note: 'Grid-tie only; no storage target included' },
+    essential: { kwh: (dailyKwh * 0.35) / usableFactor, label: 'essential backup target', note: 'Estimates roughly 35% of daily home usage for critical loads' },
+    'whole-home-half-day': { kwh: (dailyKwh * 0.5) / usableFactor, label: '12-hour whole-home target', note: 'Estimates half a day of whole-home usage' },
+    'whole-home-one-day': { kwh: dailyKwh / usableFactor, label: '1-day whole-home target', note: 'Estimates one full day of whole-home usage' },
+    'whole-home-two-day': { kwh: (dailyKwh * 2) / usableFactor, label: '2-day whole-home target', note: 'Estimates two full days of whole-home usage' }
+  };
+  return goals[goal] || goals.essential;
+}
+
 function calculateBill() {
   const method = $('#billMethod')?.value || 'bill';
   const monthly = +$('#billMonthly').value || 0;
@@ -200,13 +214,16 @@ function calculateBill() {
   const sun = +$('#billSun').value || 4.5;
   const offset = +$('#billOffset').value || 1;
   const loss = +$('#billLoss').value || 1.25;
+  const panelWatts = Math.max(100, +$('#billPanelWatts')?.value || 400);
+  const batteryGoal = $('#billBatteryGoal')?.value || 'essential';
   const monthlyKwh = method === 'loads' ? applianceData('#homeApplianceRows').reduce((sum, r) => sum + (r.watts * r.duty * r.hours * 30 / 1000), 0) : monthly / rate;
   const dailyKwh = method === 'loads' ? (monthlyKwh / 30) * offset : (monthlyKwh * offset) / 30;
   const arrayKw = (dailyKwh / sun) * loss;
   const roundedKw = roundUp(arrayKw, 0.5);
-  const panels400 = Math.ceil((roundedKw * 1000) / 400);
+  const panelCount = Math.ceil((roundedKw * 1000) / panelWatts);
   const annualKwh = dailyKwh * 365;
   const roughCost = roundedKw * 2800;
+  const battery = homeBatteryTarget(dailyKwh, batteryGoal);
   if (method === 'loads') {
     const stats = loadStats(applianceData('#homeApplianceRows'));
     const inverterBase = Math.max(roundedKw * 1000, stats.possibleRunningWatts * 0.65, stats.worstStartupScenario, stats.peakWatts * 1.25, 3000);
@@ -215,47 +232,56 @@ function calculateBill() {
     setResults('Full-home appliance load estimate', [
       [kwh(dailyKwh), 'target daily production'],
       [kw(roundedKw), 'recommended solar array'],
-      [`${panels400}`, 'approx. 400W panels'],
-      [`${watts(inverterW)} / ${voltage}`, 'hybrid inverter review class']
+      [`${panelCount}`, `approx. ${fmt(panelWatts)}W panels`],
+      [`${watts(inverterW)} / ${voltage}`, 'hybrid inverter review class'],
+      [battery.kwh > 0 ? kwh(battery.kwh) : 'None', 'battery storage target']
     ], `Based on the household loads entered, a <strong>${kw(roundedKw)}</strong> grid-tie or hybrid solar system is the rough starting point for offsetting about <strong>${fmt(offset * 100)}%</strong> of that usage. Because this is a full-home path, the result stays focused on rooftop/ground-mount solar, utility rules, and optional hybrid backup — not a small cabin kit.`, [
       `${kw(roundedKw)} grid-tie or hybrid solar system`,
-      `${panels400} × 400W-class solar panels`,
+      `${panelCount} × ${fmt(panelWatts)}W-class solar panels`,
       `Hybrid/grid-tie inverter capacity reviewed around ${watts(inverterW)}`,
       'Rooftop or ground-mount racking',
-      'Optional battery backup package sized around critical loads',
+      battery.kwh > 0 ? `${kwh(battery.kwh)} nominal battery storage for ${battery.label}` : 'No battery storage selected',
       `Annual target production: about ${fmt(annualKwh)} kWh`
     ], [
       `Sizing method: full-home appliance loads`,
       `Estimated monthly use from entered loads: ${fmt(monthlyKwh)} kWh`,
       `Peak sun hours: ${sun}`,
       `Loss factor: ${fmt((loss - 1) * 100)}%`,
+      `Panel wattage: ${fmt(panelWatts)}W`,
+      `Battery assumption: ${battery.note}; nominal target assumes roughly 85% usable capacity`,
       `Entered simultaneous running load: about ${watts(stats.possibleRunningWatts)}`,
       `Largest startup load entered: about ${watts(stats.largestStartupWatts)}`,
       'Load-based estimates depend heavily on realistic hours/day and duty cycle settings'
     ]);
-    setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, inverterW, voltage });
+    setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, batteryKwh: battery.kwh, inverterW, voltage });
     return;
   }
+  const inverterW = roundUp(Math.max(roundedKw * 1000, 3000), 500);
+  const voltage = systemVoltage(inverterW, roundedKw * 1000);
   setResults('Home solar estimate', [
     [kwh(dailyKwh), 'target daily production'],
     [kw(roundedKw), 'recommended solar array'],
-    [`${panels400}`, 'approx. 400W panels'],
-    [`$${fmt(roughCost)}`, 'rough installed cost before incentives']
+    [`${panelCount}`, `approx. ${fmt(panelWatts)}W panels`],
+    [`${watts(inverterW)} / ${voltage}`, 'hybrid inverter review class'],
+    [battery.kwh > 0 ? kwh(battery.kwh) : 'None', 'battery storage target']
   ], `A <strong>${kw(roundedKw)}</strong> grid-tie or hybrid solar kit is the rough starting point for offsetting about <strong>${fmt(offset * 100)}%</strong> of this bill. For affiliate recommendations, this should map to rooftop/grid-tie kits, hybrid inverters, racking, and optional battery backup.`, [
     `${kw(roundedKw)} grid-tie or hybrid solar kit`,
-    `${panels400} × 400W-class solar panels`,
+    `${panelCount} × ${fmt(panelWatts)}W-class solar panels`,
+    `Hybrid/grid-tie inverter capacity reviewed around ${watts(inverterW)}`,
+    battery.kwh > 0 ? `${kwh(battery.kwh)} nominal battery storage for ${battery.label}` : 'No battery storage selected',
     'Rooftop or ground-mount racking',
     'Grid-tie/hybrid inverter matched to utility rules',
-    'Optional battery backup package',
-    `Annual target production: about ${fmt(annualKwh)} kWh`
+    `Annual target production: about ${fmt(annualKwh)} kWh`,
+    `Rough installed solar cost before incentives: about $${fmt(roughCost)}`
   ], [
     `Electric rate: $${rate}/kWh`,
     `Peak sun hours: ${sun}`,
     `Loss factor: ${fmt((loss - 1) * 100)}%`,
-    'Panel estimate assumes 400W-class panels',
+    `Panel wattage: ${fmt(panelWatts)}W`,
+    `Battery assumption: ${battery.note}; nominal target assumes roughly 85% usable capacity`,
     'Bill method may include fixed fees/taxes, so exact kWh is better when available'
   ]);
-  setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, inverterW: roundedKw * 1000, voltage: systemVoltage(roundedKw * 1000, roundedKw * 1000) });
+  setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, batteryKwh: battery.kwh, inverterW, voltage });
 }
 
 function calculateEV() {
