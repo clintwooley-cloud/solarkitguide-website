@@ -85,13 +85,79 @@
 
       <div class="calculator-layout">
         <form id="bill-form" class="calc-form mode active" data-mode="bill">
-          <h3>Full home solar from electric bill</h3>
-          <label>Monthly electric bill ($)
-            <input type="number" id="billMonthly" value="220" min="0" step="10" />
+          <h3>Full home solar sizing</h3>
+          <label>Sizing method
+            <select id="billMethod">
+              <option value="bill" selected>Use monthly electric bill</option>
+              <option value="loads">Use full-home appliance loads</option>
+            </select>
           </label>
-          <label>Estimated electricity rate ($/kWh)
-            <input type="number" id="billRate" value="0.16" min="0.01" step="0.01" />
-          </label>
+
+          <div id="billAmountFields" class="method-fields active">
+            <label>Monthly electric bill ($)
+              <input type="number" id="billMonthly" value="220" min="0" step="10" />
+            </label>
+            <label>Estimated electricity rate ($/kWh)
+              <input type="number" id="billRate" value="0.16" min="0.01" step="0.01" />
+            </label>
+          </div>
+
+          <div id="homeLoadFields" class="method-fields">
+            <p class="calc-help">Use this when you want a full-home solar estimate from appliance and equipment loads instead of a utility bill. This keeps the result in the full-home/grid-tie or hybrid category, not the cabin/off-grid calculator.</p>
+            <div class="appliance-toolbar">
+              <button type="button" class="small" data-home-preset="home">Load home essentials preset</button>
+              <button type="button" class="small" data-home-preset="custom">Start custom</button>
+            </div>
+            <div class="appliance-add-row">
+              <label>Add home appliance or equipment
+                <select id="homeAppliancePicker">
+                  <option value="custom">Custom load</option>
+                  <optgroup label="Kitchen & food storage">
+                    <option value="refrigerator">Refrigerator</option>
+                    <option value="freezer">Freezer</option>
+                    <option value="mini-fridge">Mini fridge</option>
+                    <option value="microwave">Microwave</option>
+                    <option value="coffee-maker">Coffee maker</option>
+                  </optgroup>
+                  <optgroup label="Comfort & climate">
+                    <option value="ceiling-fan">Ceiling fan</option>
+                    <option value="box-fan">Box / portable fan</option>
+                    <option value="window-ac-small">Window AC — small</option>
+                    <option value="window-ac-large">Window AC — large</option>
+                    <option value="mini-split-9k">Mini split AC — 9k BTU</option>
+                    <option value="mini-split-12k">Mini split AC — 12k BTU</option>
+                    <option value="central-ac">Central AC air handler + condenser</option>
+                    <option value="space-heater">Space heater</option>
+                  </optgroup>
+                  <optgroup label="Electronics">
+                    <option value="tv-small">TV — small LED</option>
+                    <option value="tv-large">TV — large LED</option>
+                    <option value="laptop">Laptop</option>
+                    <option value="desktop-computer">Desktop computer</option>
+                    <option value="wifi-router">Wi‑Fi / router</option>
+                    <option value="phone-charging">Phone / tablet charging</option>
+                  </optgroup>
+                  <optgroup label="Laundry & water">
+                    <option value="washing-machine">Washing machine</option>
+                    <option value="electric-dryer">Electric dryer</option>
+                    <option value="gas-dryer">Gas dryer motor</option>
+                    <option value="well-pump">Well pump</option>
+                    <option value="sump-pump">Sump pump</option>
+                    <option value="water-pump-small">Small water pump</option>
+                  </optgroup>
+                  <optgroup label="Tools & workshop">
+                    <option value="battery-chargers">Battery chargers</option>
+                    <option value="circular-saw">Circular saw / power tool</option>
+                    <option value="air-compressor">Small air compressor</option>
+                    <option value="shop-lights">LED shop lights</option>
+                  </optgroup>
+                </select>
+              </label>
+              <button type="button" class="small" id="addHomeAppliance">Add appliance</button>
+            </div>
+            <div id="homeApplianceRows" class="appliance-table" aria-label="Full-home appliance loads"></div>
+          </div>
+
           <label>Average peak sun hours
             <select id="billSun">
               <option value="3.5">Lower sun / northern climate — 3.5</option>
@@ -99,7 +165,7 @@
               <option value="5.5">High sun / southwest — 5.5</option>
             </select>
           </label>
-          <label>Target bill offset
+          <label>Target usage offset
             <select id="billOffset">
               <option value="0.5">50%</option>
               <option value="0.75">75%</option>

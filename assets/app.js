@@ -165,19 +165,60 @@ function setVisualPlan({ mode, arrayW = 0, batteryKwh = 0, inverterW = 0, voltag
   $('#panelDiagram').innerHTML = panelWiring(arrayW, voltage, mode !== 'backup' || solar);
 }
 
+function loadStats(rows) {
+  const activeRows = rows.filter(r => r.watts > 0 && r.hours > 0 && r.duty > 0);
+  const dailyWh = rows.reduce((sum, r) => sum + (r.watts * r.duty * r.hours), 0);
+  const dailyKwh = dailyWh / 1000;
+  const peakWatts = Math.max(0, ...rows.map(r => r.watts));
+  const possibleRunningWatts = activeRows.reduce((sum, r) => sum + r.watts, 0);
+  const largestStartupWatts = Math.max(0, ...activeRows.map(r => r.surge));
+  const worstStartupScenario = Math.max(0, ...activeRows.map(r => r.surge + Math.max(0, possibleRunningWatts - r.watts) * 0.5));
+  return { activeRows, dailyWh, dailyKwh, peakWatts, possibleRunningWatts, largestStartupWatts, worstStartupScenario };
+}
+
 function calculateBill() {
+  const method = $('#billMethod')?.value || 'bill';
   const monthly = +$('#billMonthly').value || 0;
   const rate = +$('#billRate').value || 0.16;
   const sun = +$('#billSun').value || 4.5;
   const offset = +$('#billOffset').value || 1;
   const loss = +$('#billLoss').value || 1.25;
-  const monthlyKwh = monthly / rate;
-  const dailyKwh = (monthlyKwh * offset) / 30;
+  const monthlyKwh = method === 'loads' ? applianceData('#homeApplianceRows').reduce((sum, r) => sum + (r.watts * r.duty * r.hours * 30 / 1000), 0) : monthly / rate;
+  const dailyKwh = method === 'loads' ? (monthlyKwh / 30) * offset : (monthlyKwh * offset) / 30;
   const arrayKw = (dailyKwh / sun) * loss;
   const roundedKw = roundUp(arrayKw, 0.5);
   const panels400 = Math.ceil((roundedKw * 1000) / 400);
   const annualKwh = dailyKwh * 365;
   const roughCost = roundedKw * 2800;
+  if (method === 'loads') {
+    const stats = loadStats(applianceData('#homeApplianceRows'));
+    const inverterBase = Math.max(roundedKw * 1000, stats.possibleRunningWatts * 0.65, stats.worstStartupScenario, stats.peakWatts * 1.25, 3000);
+    const inverterW = roundUp(inverterBase, 500);
+    const voltage = systemVoltage(inverterW, roundedKw * 1000);
+    setResults('Full-home appliance load estimate', [
+      [kwh(dailyKwh), 'target daily production'],
+      [kw(roundedKw), 'recommended solar array'],
+      [`${panels400}`, 'approx. 400W panels'],
+      [`${watts(inverterW)} / ${voltage}`, 'hybrid inverter review class']
+    ], `Based on the household loads entered, a <strong>${kw(roundedKw)}</strong> grid-tie or hybrid solar system is the rough starting point for offsetting about <strong>${fmt(offset * 100)}%</strong> of that usage. Because this is a full-home path, the result stays focused on rooftop/ground-mount solar, utility rules, and optional hybrid backup — not a small cabin kit.`, [
+      `${kw(roundedKw)} grid-tie or hybrid solar system`,
+      `${panels400} × 400W-class solar panels`,
+      `Hybrid/grid-tie inverter capacity reviewed around ${watts(inverterW)}`,
+      'Rooftop or ground-mount racking',
+      'Optional battery backup package sized around critical loads',
+      `Annual target production: about ${fmt(annualKwh)} kWh`
+    ], [
+      `Sizing method: full-home appliance loads`,
+      `Estimated monthly use from entered loads: ${fmt(monthlyKwh)} kWh`,
+      `Peak sun hours: ${sun}`,
+      `Loss factor: ${fmt((loss - 1) * 100)}%`,
+      `Entered simultaneous running load: about ${watts(stats.possibleRunningWatts)}`,
+      `Largest startup load entered: about ${watts(stats.largestStartupWatts)}`,
+      'Load-based estimates depend heavily on realistic hours/day and duty cycle settings'
+    ]);
+    setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, inverterW, voltage });
+    return;
+  }
   setResults('Home solar estimate', [
     [kwh(dailyKwh), 'target daily production'],
     [kw(roundedKw), 'recommended solar array'],
@@ -239,10 +280,11 @@ function calculateEV() {
   setVisualPlan({ mode: 'ev', arrayW: roundedKw * 1000, inverterW: roundedKw * 1000, voltage: systemVoltage(roundedKw * 1000, roundedKw * 1000), solar: true });
 }
 
-function renderAppliances(rows = presets.cabin) {
-  $('#applianceRows').innerHTML = rows.map((row, idx) => applianceRow(row, idx)).join('');
+function renderAppliances(rows = presets.cabin, target = '#applianceRows') {
+  $(target).innerHTML = rows.map((row, idx) => applianceRow(row, idx)).join('');
   bindInputs();
 }
+function renderHomeAppliances(rows = presets.home) { renderAppliances(rows, '#homeApplianceRows'); }
 function applianceRow([name, watts, duty, hours, surge], idx) {
   const startupWatts = Math.max(+surge || +watts || 0, +watts || 0);
   return `<div class="appliance-row">
@@ -254,8 +296,8 @@ function applianceRow([name, watts, duty, hours, surge], idx) {
     <button type="button" class="remove" aria-label="Remove appliance">×</button>
   </div>`;
 }
-function applianceData() {
-  return $$('.appliance-row').map(row => {
+function applianceData(root = document) {
+  return $$('.appliance-row', typeof root === 'string' ? $(root) : root).map(row => {
     const wattsValue = +$('[data-field="watts"]', row).value || 0;
     const surgeValue = +$('[data-field="surge"]', row).value || wattsValue;
     return {
@@ -268,14 +310,8 @@ function applianceData() {
   });
 }
 function calculateLoad() {
-  const rows = applianceData();
-  const activeRows = rows.filter(r => r.watts > 0 && r.hours > 0 && r.duty > 0);
-  const dailyWh = rows.reduce((sum, r) => sum + (r.watts * r.duty * r.hours), 0);
-  const dailyKwh = dailyWh / 1000;
-  const peakWatts = Math.max(0, ...rows.map(r => r.watts));
-  const possibleRunningWatts = activeRows.reduce((sum, r) => sum + r.watts, 0);
-  const largestStartupWatts = Math.max(0, ...activeRows.map(r => r.surge));
-  const worstStartupScenario = Math.max(0, ...activeRows.map(r => r.surge + Math.max(0, possibleRunningWatts - r.watts) * 0.5));
+  const rows = applianceData('#applianceRows');
+  const { dailyWh, dailyKwh, peakWatts, possibleRunningWatts, largestStartupWatts, worstStartupScenario } = loadStats(rows);
   const autonomy = +$('#autonomyDays').value || 2;
   const sun = +$('#loadSun').value || 4.5;
   const dod = +$('#batteryChem').value || 0.8;
@@ -351,7 +387,13 @@ function calculate() {
 }
 function bindInputs() {
   $$('input, select').forEach(el => el.oninput = calculate);
-  $$('.remove').forEach(btn => btn.onclick = () => { btn.closest('.appliance-row').remove(); calculateLoad(); });
+  $$('.remove').forEach(btn => btn.onclick = () => { btn.closest('.appliance-row').remove(); calculate(); });
+}
+
+function updateBillMethod() {
+  const method = $('#billMethod')?.value || 'bill';
+  $('#billAmountFields')?.classList.toggle('active', method === 'bill');
+  $('#homeLoadFields')?.classList.toggle('active', method === 'loads');
 }
 
 function switchMode(mode) {
@@ -368,6 +410,11 @@ $$('[data-preset]').forEach(btn => btn.addEventListener('click', () => {
   renderAppliances(presets[btn.dataset.preset]);
 }));
 $('#loadType').addEventListener('change', e => renderAppliances(presets[e.target.value] || presets.custom));
+$('#billMethod')?.addEventListener('change', () => { updateBillMethod(); calculateBill(); });
+$$('[data-home-preset]').forEach(btn => btn.addEventListener('click', () => {
+  renderHomeAppliances(presets[btn.dataset.homePreset] || presets.custom);
+  calculateBill();
+}));
 $('#addAppliance').addEventListener('click', () => {
   const selected = $('#appliancePicker')?.value || 'custom';
   const row = applianceLibrary[selected] || applianceLibrary.custom;
@@ -375,7 +422,16 @@ $('#addAppliance').addEventListener('click', () => {
   bindInputs();
   calculateLoad();
 });
+$('#addHomeAppliance')?.addEventListener('click', () => {
+  const selected = $('#homeAppliancePicker')?.value || 'custom';
+  const row = applianceLibrary[selected] || applianceLibrary.custom;
+  $('#homeApplianceRows').insertAdjacentHTML('beforeend', applianceRow(row, Date.now()));
+  bindInputs();
+  calculateBill();
+});
 
 renderAppliances(presets.cabin);
+renderHomeAppliances(presets.home);
 bindInputs();
+updateBillMethod();
 calculateBill();
