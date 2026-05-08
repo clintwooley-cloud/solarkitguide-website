@@ -3,73 +3,73 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
 const presets = {
   cabin: [
-    ['Refrigerator', 150, 35, 24],
-    ['LED lights', 60, 100, 5],
-    ['Wi‑Fi/router', 20, 100, 8],
-    ['Laptop/phones', 120, 100, 3],
-    ['Water pump', 800, 10, 1],
-    ['Microwave', 1200, 100, 0.25]
+    ['Refrigerator', 150, 35, 24, 1200],
+    ['LED lights', 60, 100, 5, 60],
+    ['Wi‑Fi/router', 20, 100, 8, 20],
+    ['Laptop/phones', 120, 100, 3, 120],
+    ['Water pump', 800, 10, 1, 1200],
+    ['Microwave', 1200, 100, 0.25, 1200]
   ],
   rv: [
-    ['12V fridge', 70, 45, 24],
-    ['LED lights', 40, 100, 4],
-    ['Vent fan', 35, 100, 8],
-    ['Laptop/phones', 100, 100, 3],
-    ['Water pump', 120, 15, 1],
-    ['Coffee maker', 900, 100, 0.2]
+    ['12V fridge', 70, 45, 24, 250],
+    ['LED lights', 40, 100, 4, 60],
+    ['Vent fan', 35, 100, 8, 35],
+    ['Laptop/phones', 100, 100, 3, 120],
+    ['Water pump', 120, 15, 1, 1200],
+    ['Coffee maker', 900, 100, 0.2, 900]
   ],
   shed: [
-    ['LED shop lights', 80, 100, 4],
-    ['Battery chargers', 180, 100, 2],
-    ['Small air compressor', 900, 20, 0.5],
-    ['Circular saw / tools', 1200, 30, 0.5],
-    ['Fan', 75, 100, 4]
+    ['LED shop lights', 80, 100, 4, 80],
+    ['Battery chargers', 180, 100, 2, 180],
+    ['Small air compressor', 900, 20, 0.5, 2200],
+    ['Circular saw / tools', 1200, 30, 0.5, 1800],
+    ['Fan', 75, 100, 4, 75]
   ],
   home: [
-    ['Refrigerator', 150, 35, 24],
-    ['Freezer', 120, 35, 24],
-    ['LED lights', 200, 100, 5],
-    ['Wi‑Fi/router', 25, 100, 24],
-    ['Well pump', 1200, 15, 1],
-    ['Microwave', 1200, 100, 0.3],
-    ['Laundry / misc.', 800, 50, 1]
+    ['Refrigerator', 150, 35, 24, 1200],
+    ['Freezer', 120, 35, 24, 800],
+    ['LED lights', 200, 100, 5, 60],
+    ['Wi‑Fi/router', 25, 100, 24, 20],
+    ['Well pump', 1200, 15, 1, 2400],
+    ['Microwave', 1200, 100, 0.3, 1200],
+    ['Laundry / misc.', 800, 50, 1, 1200]
   ],
   custom: [
-    ['Custom load', 100, 100, 1]
+    ['Custom load', 100, 100, 1, 150]
   ]
 };
 
 const applianceLibrary = {
-  custom: ['Custom load', 100, 100, 1],
-  refrigerator: ['Refrigerator', 150, 35, 24],
-  freezer: ['Freezer', 120, 35, 24],
-  'mini-fridge': ['Mini fridge', 65, 40, 24],
-  microwave: ['Microwave', 1200, 100, 0.25],
-  'coffee-maker': ['Coffee maker', 900, 100, 0.2],
-  'ceiling-fan': ['Ceiling fan', 60, 100, 8],
-  'box-fan': ['Box / portable fan', 75, 100, 6],
-  'window-ac-small': ['Window AC — small', 600, 60, 6],
-  'window-ac-large': ['Window AC — large', 1200, 60, 6],
-  'mini-split-9k': ['Mini split AC — 9k BTU', 700, 55, 8],
-  'mini-split-12k': ['Mini split AC — 12k BTU', 1100, 55, 8],
-  'central-ac': ['Central AC air handler + condenser', 3500, 55, 8],
-  'space-heater': ['Space heater', 1500, 100, 3],
-  'tv-small': ['TV — small LED', 60, 100, 4],
-  'tv-large': ['TV — large LED', 150, 100, 4],
-  laptop: ['Laptop', 65, 100, 4],
-  'desktop-computer': ['Desktop computer', 250, 100, 4],
-  'wifi-router': ['Wi‑Fi / router', 25, 100, 24],
-  'phone-charging': ['Phone / tablet charging', 25, 100, 3],
-  'washing-machine': ['Washing machine', 500, 50, 1],
-  'electric-dryer': ['Electric dryer', 5000, 100, 0.75],
-  'gas-dryer': ['Gas dryer motor', 500, 100, 0.75],
-  'well-pump': ['Well pump', 1200, 15, 1],
-  'sump-pump': ['Sump pump', 800, 15, 1],
-  'water-pump-small': ['Small water pump', 120, 15, 1],
-  'battery-chargers': ['Battery chargers', 180, 100, 2],
-  'circular-saw': ['Circular saw / power tool', 1200, 30, 0.5],
-  'air-compressor': ['Small air compressor', 900, 20, 0.5],
-  'shop-lights': ['LED shop lights', 80, 100, 4]
+  custom: ['Custom load', 100, 100, 1, 150],
+  refrigerator: ['Refrigerator', 150, 35, 24, 1200],
+  freezer: ['Freezer', 120, 35, 24, 800],
+  'mini-fridge': ['Mini fridge', 65, 40, 24, 250],
+  microwave: ['Microwave', 1200, 100, 0.25, 1200],
+  'coffee-maker': ['Coffee maker', 900, 100, 0.2, 900],
+  'ceiling-fan': ['Ceiling fan', 60, 100, 8, 60],
+  'box-fan': ['Box / portable fan', 75, 100, 6, 75],
+  'window-ac-small': ['Window AC — small', 600, 60, 6, 1800],
+  'window-ac-large': ['Window AC — large', 1200, 60, 6, 3600],
+  'mini-split-9k': ['Mini split AC — 9k BTU', 700, 55, 8, 1400],
+  'mini-split-12k': ['Mini split AC — 12k BTU', 1100, 55, 8, 2200],
+  'central-ac': ['Central AC air handler + condenser', 3500, 55, 8, 9000],
+  'space-heater': ['Space heater', 1500, 100, 3, 1500],
+  'tv-small': ['TV — small LED', 60, 100, 4, 60],
+  'tv-large': ['TV — large LED', 150, 100, 4, 150],
+  laptop: ['Laptop', 65, 100, 4, 65],
+  'desktop-computer': ['Desktop computer', 250, 100, 4, 350],
+  'wifi-router': ['Wi‑Fi / router', 25, 100, 24, 25],
+  'phone-charging': ['Phone / tablet charging', 25, 100, 3, 25],
+  'washing-machine': ['Washing machine', 500, 50, 1, 1200],
+  'electric-dryer': ['Electric dryer', 5000, 100, 0.75, 6000],
+  'gas-dryer': ['Gas dryer motor', 500, 100, 0.75, 800],
+  'well-pump': ['Well pump', 1200, 15, 1, 2400],
+  'sump-pump': ['Sump pump', 800, 15, 1, 1800],
+  'water-pump-small': ['Small water pump', 120, 15, 1, 300],
+  'battery-chargers': ['Battery chargers', 180, 100, 2, 180],
+  'circular-saw': ['Circular saw / power tool', 1200, 30, 0.5, 1800],
+  'air-compressor': ['Small air compressor', 900, 20, 0.5, 2200],
+  'shop-lights': ['LED shop lights', 80, 100, 4, 80]
 };
 
 function roundUp(value, step) { return Math.ceil(value / step) * step; }
@@ -196,35 +196,45 @@ function renderAppliances(rows = presets.cabin) {
   $('#applianceRows').innerHTML = rows.map((row, idx) => applianceRow(row, idx)).join('');
   bindInputs();
 }
-function applianceRow([name, watts, duty, hours], idx) {
+function applianceRow([name, watts, duty, hours, surge], idx) {
+  const startupWatts = Math.max(+surge || +watts || 0, +watts || 0);
   return `<div class="appliance-row">
     <label>Appliance<input data-field="name" value="${name}" /></label>
-    <label>Watts<input data-field="watts" type="number" min="0" value="${watts}" /></label>
+    <label>Run watts<input data-field="watts" type="number" min="0" value="${watts}" /></label>
+    <label>Startup watts<input data-field="surge" type="number" min="0" value="${startupWatts}" /></label>
     <label>Duty %<input data-field="duty" type="number" min="0" max="100" value="${duty}" /></label>
     <label>Hours/day<input data-field="hours" type="number" min="0" step="0.25" value="${hours}" /></label>
     <button type="button" class="remove" aria-label="Remove appliance">×</button>
   </div>`;
 }
 function applianceData() {
-  return $$('.appliance-row').map(row => ({
-    name: $('[data-field="name"]', row).value,
-    watts: +$('[data-field="watts"]', row).value || 0,
-    duty: (+$('[data-field="duty"]', row).value || 0) / 100,
-    hours: +$('[data-field="hours"]', row).value || 0
-  }));
+  return $$('.appliance-row').map(row => {
+    const wattsValue = +$('[data-field="watts"]', row).value || 0;
+    const surgeValue = +$('[data-field="surge"]', row).value || wattsValue;
+    return {
+      name: $('[data-field="name"]', row).value,
+      watts: wattsValue,
+      surge: Math.max(surgeValue, wattsValue),
+      duty: (+$('[data-field="duty"]', row).value || 0) / 100,
+      hours: +$('[data-field="hours"]', row).value || 0
+    };
+  });
 }
 function calculateLoad() {
   const rows = applianceData();
+  const activeRows = rows.filter(r => r.watts > 0 && r.hours > 0 && r.duty > 0);
   const dailyWh = rows.reduce((sum, r) => sum + (r.watts * r.duty * r.hours), 0);
   const dailyKwh = dailyWh / 1000;
   const peakWatts = Math.max(0, ...rows.map(r => r.watts));
-  const possibleRunningWatts = rows.reduce((sum, r) => sum + (r.watts > 0 && r.hours > 0 && r.duty > 0 ? r.watts : 0), 0);
+  const possibleRunningWatts = activeRows.reduce((sum, r) => sum + r.watts, 0);
+  const largestStartupWatts = Math.max(0, ...activeRows.map(r => r.surge));
+  const worstStartupScenario = Math.max(0, ...activeRows.map(r => r.surge + Math.max(0, possibleRunningWatts - r.watts) * 0.5));
   const autonomy = +$('#autonomyDays').value || 2;
   const sun = +$('#loadSun').value || 4.5;
   const dod = +$('#batteryChem').value || 0.8;
   const arrayW = roundUp((dailyWh * 1.25) / sun, 100);
   const batteryKwh = (dailyKwh * autonomy) / dod;
-  const inverterBase = Math.max(peakWatts * 1.5, possibleRunningWatts * 0.65, 1000);
+  const inverterBase = Math.max(possibleRunningWatts * 0.65, worstStartupScenario, peakWatts * 1.25, 1000);
   const inverterW = roundUp(inverterBase, 500);
   const voltage = systemVoltage(inverterW, arrayW);
   setResults('Off-grid / appliance estimate', [
@@ -232,10 +242,10 @@ function calculateLoad() {
     [watts(arrayW), 'recommended solar array'],
     [kwh(batteryKwh), 'battery bank capacity (nominal)'],
     [`${watts(inverterW)} / ${voltage}`, 'inverter and system voltage']
-  ], `This looks like a <strong>${voltage}</strong> component build. The largest single running load is about <strong>${watts(peakWatts)}</strong>, and the listed loads total about <strong>${watts(possibleRunningWatts)}</strong> if many are used together. Surge loads should still be checked before recommending a specific inverter. Battery capacity shown is nominal capacity before the selected depth-of-discharge limit.`, [
+  ], `This looks like a <strong>${voltage}</strong> component build. The listed loads total about <strong>${watts(possibleRunningWatts)}</strong> if many are used together, and the highest startup load entered is about <strong>${watts(largestStartupWatts)}</strong>. The inverter estimate allows for one larger startup load while other loads may already be running. Battery capacity shown is nominal capacity before the selected depth-of-discharge limit.`, [
     `${watts(arrayW)} solar panel array`,
     `${kwh(batteryKwh)} nominal battery bank target`,
-    `${watts(inverterW)} pure sine wave inverter`,
+    `${watts(inverterW)} pure sine wave inverter with startup/surge capacity checked against your equipment`,
     `${voltage} charge controller / MPPT setup`,
     'Fuses, breakers, disconnects, bus bars, cables, and monitoring',
     'Optional complete kit if available in this size tier'
@@ -244,7 +254,8 @@ function calculateLoad() {
     `Autonomy target: ${autonomy} day${autonomy === 1 ? '' : 's'}`,
     `Usable battery setting: ${fmt(dod * 100)}%`,
     'Solar array includes a 25% production/loss buffer',
-    'Inverter class considers largest load plus a simultaneous-load allowance'
+    `Inverter class considers running watts plus a startup scenario of about ${watts(worstStartupScenario)}`,
+    'Startup watts are estimates; check appliance nameplates and manufacturer locked-rotor/startup specs before buying'
   ]);
   setVisualPlan({ mode: 'load', arrayW, batteryKwh, inverterW, voltage });
 }

@@ -104,7 +104,7 @@ input, select {
 button.small { padding: 9px 12px; background: var(--mint); color: var(--leaf-dark); font-size: 13px; }
 button.ghost { background: white; border: 1px solid var(--line); }
 .appliance-table { display: grid; gap: 8px; }
-.appliance-row { display: grid; grid-template-columns: 1.3fr .7fr .7fr .7fr auto; gap: 8px; align-items: end; padding: 10px; background: #f8fbf8; border: 1px solid var(--line); border-radius: 18px; }
+.appliance-row { display: grid; grid-template-columns: 1.25fr .65fr .75fr .65fr .65fr auto; gap: 8px; align-items: end; padding: 10px; background: #f8fbf8; border: 1px solid var(--line); border-radius: 18px; }
 .appliance-row label { margin: 0; font-size: 12px; }
 .remove { background: #ffe8df; color: #9b3214; border-radius: 12px; padding: 10px 12px; }
 .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin: 12px 0 18px; }
@@ -194,3 +194,4 @@ button.ghost { background: white; border: 1px solid var(--line); }
 .appliance-add-row label { margin: 0; }
 .appliance-add-row button { margin-bottom: 0; white-space: nowrap; }
 @media (max-width: 620px) { .appliance-add-row { grid-template-columns: 1fr; } .appliance-add-row button { width: 100%; } }
+.calc-help { margin: -4px 0 12px; color: var(--muted); font-size: 13px; line-height: 1.45; }
