@@ -83,6 +83,21 @@
         <button class="tab" data-mode="ev" type="button">🚗 EV charging</button>
       </div>
 
+      <div class="location-assumption">
+        <label>Location / solar region estimate
+          <select id="sunRegion">
+            <option value="manual">Manual peak sun hours below</option>
+            <option value="3.25">Low sun / cloudy or far north — 3.25</option>
+            <option value="3.75">Northern US / upper Midwest — 3.75</option>
+            <option value="4.5" selected>Typical US average — 4.5</option>
+            <option value="5">Southeast / sunnier central states — 5.0</option>
+            <option value="5.5">Southwest / high-sun states — 5.5</option>
+            <option value="6">Desert Southwest / very high sun — 6.0</option>
+          </select>
+        </label>
+        <p class="calc-help">This adjusts the peak sun hour assumptions used by the calculators. It is a planning shortcut, not a ZIP-code production model. Shade, roof angle, roof direction, weather, season, snow, and utility rules still matter.</p>
+      </div>
+
       <div class="calculator-layout">
         <form id="bill-form" class="calc-form mode active" data-mode="bill">
           <h3>Full home solar sizing</h3>
