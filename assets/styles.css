@@ -193,6 +193,8 @@ button.ghost { background: white; border: 1px solid var(--line); }
 .assumptions-box h4 { margin: 0 0 8px; }
 .assumptions-box ul { margin: 0; padding-left: 18px; line-height: 1.55; font-size: 13px; }
 .formula-box { padding: 14px 16px; margin: 16px 0; border-radius: 16px; background: var(--mint); border: 1px solid #cfe8dc; font-weight: 800; color: var(--leaf-dark); line-height: 1.6; }
+.affiliate-note { padding: 12px 14px; margin: 14px 0; border-radius: 16px; background: #fff8e5; border: 1px solid #f1d78f; color: #5b4210; font-size: 13px; line-height: 1.5; }
+.partner-section .affiliate-note { max-width: 900px; background: rgba(255,255,255,.1); border-color: rgba(248,185,49,.55); color: #fff4cf; }
 .related-card a { color: var(--leaf-dark); font-weight: 800; }
 .article-page article { max-width: 980px; margin: 0 auto; }
 .toc-card { border-left: 6px solid var(--sun); }
