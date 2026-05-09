@@ -197,14 +197,21 @@ function loadStats(rows) {
 
 function homeBatteryTarget(dailyKwh, goal) {
   const usableFactor = 0.85;
+  const essentialDays = goal === 'essential' ? 1 : +(goal || '').replace('essential-', '');
+  if (essentialDays >= 1 && essentialDays <= 5) {
+    return {
+      kwh: (dailyKwh * 0.35 * essentialDays) / usableFactor,
+      label: `${essentialDays}-day essential backup target`,
+      note: `Estimates roughly 35% of daily home usage for critical loads over ${essentialDays} day${essentialDays === 1 ? '' : 's'}`
+    };
+  }
   const goals = {
     none: { kwh: 0, label: 'No battery selected', note: 'Grid-tie only; no storage target included' },
-    essential: { kwh: (dailyKwh * 0.35) / usableFactor, label: 'essential backup target', note: 'Estimates roughly 35% of daily home usage for critical loads' },
     'whole-home-half-day': { kwh: (dailyKwh * 0.5) / usableFactor, label: '12-hour whole-home target', note: 'Estimates half a day of whole-home usage' },
     'whole-home-one-day': { kwh: dailyKwh / usableFactor, label: '1-day whole-home target', note: 'Estimates one full day of whole-home usage' },
     'whole-home-two-day': { kwh: (dailyKwh * 2) / usableFactor, label: '2-day whole-home target', note: 'Estimates two full days of whole-home usage' }
   };
-  return goals[goal] || goals.essential;
+  return goals[goal] || homeBatteryTarget(dailyKwh, 'essential-1');
 }
 
 function calculateBill() {
