@@ -56,8 +56,8 @@
       <div class="calculator-paths" aria-label="Choose calculator type">
         <button class="path-card active" data-mode="bill" type="button">
           <span class="path-icon">🏠</span>
-          <strong>Full home / electric bill</strong>
-          <small>Use your monthly bill to size a rooftop or hybrid solar kit.</small>
+          <strong>Family Home Solar Needs</strong>
+          <small>Use your monthly bill or list by appliance.</small>
         </button>
         <button class="path-card" data-mode="load" type="button">
           <span class="path-icon">🔌</span>
@@ -74,13 +74,6 @@
           <strong>EV charging</strong>
           <small>Estimate the extra solar needed to charge an electric car from daily driving.</small>
         </button>
-      </div>
-
-      <div class="mode-tabs" role="tablist" aria-label="Calculator modes">
-        <button class="tab active" data-mode="bill" type="button">🏠 Full home / bill</button>
-        <button class="tab" data-mode="load" type="button">🔌 Cabins, RVs &amp; Tiny Homes</button>
-        <button class="tab" data-mode="backup" type="button">🔋 Backup power</button>
-        <button class="tab" data-mode="ev" type="button">🚗 EV charging</button>
       </div>
 
       <div class="location-assumption">
@@ -101,12 +94,11 @@
       <div class="calculator-layout">
         <form id="bill-form" class="calc-form mode active" data-mode="bill">
           <h3>Full home solar sizing</h3>
-          <label>Sizing method
-            <select id="billMethod">
-              <option value="bill" selected>Use monthly electric bill</option>
-              <option value="loads">Use full-home appliance loads</option>
-            </select>
-          </label>
+          <input type="hidden" id="billMethod" value="bill" />
+          <div class="method-choice" aria-label="Choose full-home sizing method">
+            <button class="method-button active" data-bill-method="bill" type="button">Calculate By Monthly Bill</button>
+            <button class="method-button" data-bill-method="loads" type="button">Calculate By Appliance List</button>
+          </div>
 
           <div id="billAmountFields" class="method-fields active">
             <label>Monthly electric bill ($)

@@ -243,7 +243,7 @@ function calculateBill() {
       battery.kwh > 0 ? `${kwh(battery.kwh)} nominal battery storage for ${battery.label}` : 'No battery storage selected',
       `Annual target production: about ${fmt(annualKwh)} kWh`
     ], [
-      `Sizing method: full-home appliance loads`,
+      `Calculation method: full-home appliance loads`
       `Estimated monthly use from entered loads: ${fmt(monthlyKwh)} kWh`,
       `Peak sun hours: ${sun}`,
       `Loss factor: ${fmt((loss - 1) * 100)}%`,
@@ -437,6 +437,7 @@ function updateBillMethod() {
   const method = $('#billMethod')?.value || 'bill';
   $('#billAmountFields')?.classList.toggle('active', method === 'bill');
   $('#homeLoadFields')?.classList.toggle('active', method === 'loads');
+  $$('[data-bill-method]').forEach(btn => btn.classList.toggle('active', btn.dataset.billMethod === method));
 }
 
 function setSunValue(field, value) {
@@ -471,6 +472,11 @@ $$('[data-preset]').forEach(btn => btn.addEventListener('click', () => {
 $('#loadType').addEventListener('change', e => renderAppliances(presets[e.target.value] || presets.custom));
 $('#sunRegion')?.addEventListener('change', applySunRegion);
 $('#billMethod')?.addEventListener('change', () => { updateBillMethod(); calculateBill(); });
+$$('[data-bill-method]').forEach(btn => btn.addEventListener('click', () => {
+  $('#billMethod').value = btn.dataset.billMethod;
+  updateBillMethod();
+  calculateBill();
+}));
 $$('[data-home-preset]').forEach(btn => btn.addEventListener('click', () => {
   renderHomeAppliances(presets[btn.dataset.homePreset] || presets.custom);
   calculateBill();
