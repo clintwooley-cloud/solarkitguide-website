@@ -6,12 +6,13 @@ Use custom-written articles as the long-term asset. Outside articles are useful 
 
 ## First cluster: calculator support pages
 
-1. Solar Kit Size Calculator — parent/calculator intent
-2. Off-Grid Solar Calculator — cabin/RV/tiny-home load sizing
-3. Battery Bank Calculator — battery kWh, amp-hours, autonomy
-4. Inverter Size Calculator — continuous watts, surge, voltage
-5. Solar Generator vs DIY Solar Kit — buyer comparison
-6. Best Solar Kits for Cabins — first affiliate-friendly use-case page
+1. Solar Power System Basics — beginner orientation to panels, charge controllers, batteries, inverters, system voltage, and when each component is needed; published as `/solar-power-system-basics/`
+2. Solar Kit Size Calculator — parent/calculator intent
+3. Off-Grid Solar Calculator — cabin/RV/tiny-home load sizing
+4. Battery Bank Calculator — battery kWh, amp-hours, autonomy
+5. Inverter Size Calculator — continuous watts, surge, voltage
+6. Solar Generator vs DIY Solar Kit — buyer comparison
+7. Best Solar Kits for Cabins — first affiliate-friendly use-case page
 
 ## Next article topics
 
