@@ -69,6 +69,9 @@ h1 { font-size: clamp(44px, 8vw, 82px); line-height: .92; letter-spacing: -.075e
 h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1; letter-spacing: -.055em; margin-bottom: 14px; }
 h3 { font-size: 22px; letter-spacing: -.03em; }
 .lead { color: #385249; font-size: clamp(18px, 2vw, 22px); line-height: 1.55; max-width: 720px; }
+.article-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 14px 0 0; color: var(--muted); font-size: 13px; font-weight: 750; }
+.article-meta span { display: inline-flex; align-items: center; }
+.article-meta span + span::before { content: '•'; margin-right: 14px; color: var(--sun-dark); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 18px; }
 .button, button {
   border: 0;
