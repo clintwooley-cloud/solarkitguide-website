@@ -94,6 +94,9 @@ h3 { font-size: 22px; letter-spacing: -.03em; }
 .calc-form.active { display: block; }
 .method-fields { display: none; }
 .method-fields.active { display: block; }
+.method-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 16px; padding: 8px; border-radius: 22px; background: rgba(231,245,238,.85); border: 1px solid #cfe8dc; }
+.method-button { border-radius: 16px; background: transparent; color: var(--leaf-dark); border: 1px solid transparent; padding: 12px 14px; }
+.method-button.active { background: white; border-color: #cfe8dc; box-shadow: 0 8px 20px rgba(14, 63, 44, .1); }
 label { display: grid; gap: 7px; margin: 14px 0; color: #29483e; font-weight: 750; font-size: 14px; }
 input, select {
   width: 100%;
@@ -147,6 +150,7 @@ button.ghost { background: white; border: 1px solid var(--line); }
   .two-col, .result-grid, .check-grid { grid-template-columns: 1fr; }
   .mode-tabs { width: 100%; border-radius: 22px; }
   .tab { flex: 1 1 100%; }
+  .method-choice { grid-template-columns: 1fr; }
   .appliance-row { grid-template-columns: 1fr 1fr; }
   .appliance-row label:first-child { grid-column: 1 / -1; }
   .guide-list { columns: 1; }
