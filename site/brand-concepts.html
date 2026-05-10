@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SolarKitGuide Brand Concepts</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>
+    body { background: linear-gradient(180deg,#fffaf0 0%,#eef9f3 100%); }
+    .brand-board { padding: clamp(24px,5vw,64px); max-width: 1180px; margin: 0 auto; }
+    .brand-board h1 { font-size: clamp(38px,6vw,64px); }
+    .concept-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; margin-top: 24px; }
+    .concept-card { background: rgba(255,255,255,.92); border: 1px solid var(--line); border-radius: 28px; padding: 24px; box-shadow: var(--shadow); }
+    .concept-card figure { display: grid; place-items: center; min-height: 150px; margin: 0 0 16px; border-radius: 20px; background: linear-gradient(135deg,#fff,#f5fbf7); border: 1px solid #e8f0ea; overflow: hidden; }
+    .concept-card figure.dark { background: #063B2C; }
+    .concept-card figure.tall { min-height: 260px; }
+    .concept-card img { max-width: 94%; height: auto; }
+    .concept-card h2 { font-size: 25px; margin-bottom: 8px; }
+    .concept-card p { color: var(--muted); line-height: 1.58; }
+    .recommendation { grid-column: 1 / -1; }
+    .brand-sample { display: grid; grid-template-columns: minmax(0,1fr) 190px; gap: 18px; align-items: center; margin-top: 14px; padding: 18px; border-radius: 24px; background: #fffdf7; border: 1px solid #f1d78f; }
+    .brand-sample img { width: 170px; justify-self: center; }
+    .back-link { display: inline-flex; margin-bottom: 20px; color: var(--leaf); font-weight: 850; text-decoration: none; }
+    @media(max-width: 820px){ .concept-grid, .brand-sample { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="brand-board">
+    <a class="back-link" href="index.html">← Back to site</a>
+    <p class="eyebrow">Brand exploration</p>
+    <h1>Polished logo + subtle mascot concepts</h1>
+    <p class="lead">The goal is not to turn SolarKitGuide into a cartoon brand. The strongest direction is a cleaner, more credible logo with Wattson the solar bee used sparingly as a friendly helper in empty states, beginner callouts, and maybe future calculator tips.</p>
+
+    <section class="concept-grid">
+      <article class="concept-card recommendation">
+        <h2>My recommendation</h2>
+        <p><strong>Use Option A as the serious brand logo</strong> and keep the bee as a supporting illustration. That gives the site more polish for affiliate approvals while still softening the beginner experience.</p>
+        <div class="brand-sample">
+          <div>
+            <p class="mini-label">Recommended pairing</p>
+            <h3>Clean solar mark + Wattson as guide</h3>
+            <p>The logo stays professional. The bee appears in beginner-focused places: “New to solar?” callouts, calculator tips, equipment explainers, and maybe a lightweight error/empty state.</p>
+          </div>
+          <img src="assets/mascot-wattson-bee.svg" alt="Wattson bee mascot concept" />
+        </div>
+      </article>
+
+      <article class="concept-card">
+        <figure><img src="assets/logo-v7-polished.svg" alt="Polished SolarKitGuide logo concept" /></figure>
+        <h2>Option A — Polished planning brand</h2>
+        <p>The safest upgrade: cleaner badge, stronger wordmark, and a small tagline. It feels more credible for affiliate applications and still matches the existing site.</p>
+      </article>
+
+      <article class="concept-card">
+        <figure><img src="assets/logo-v8-wattson-wordmark.svg" alt="SolarKitGuide Wattson bee wordmark concept" /></figure>
+        <h2>Option B — Bee in the logo</h2>
+        <p>Friendly and memorable, but riskier. I would avoid making the bee the main logo unless we want a more playful brand from the start.</p>
+      </article>
+
+      <article class="concept-card">
+        <figure><img src="assets/logo-v9-premium-badge.svg" alt="Premium badge logo concept" /></figure>
+        <h2>Option C — Premium badge</h2>
+        <p>A more app-like badge. Professional and compact, though slightly less warm than the polished planning logo.</p>
+      </article>
+
+      <article class="concept-card">
+        <figure class="tall"><img src="assets/mascot-wattson-bee.svg" alt="Wattson bee mascot concept" /></figure>
+        <h2>Wattson mascot direction</h2>
+        <p>A bumblebee works because bees naturally connect to sunshine, energy, helpfulness, and “busy little guide” energy. The solar-panel wings and lightning detail make it specific to SolarKitGuide instead of generic.</p>
+      </article>
+
+      <article class="concept-card recommendation">
+        <h2>Where the mascot could appear later</h2>
+        <ul>
+          <li><strong>Beginner callout:</strong> “New to solar? Wattson recommends starting with the basics.”</li>
+          <li><strong>Calculator tips:</strong> short helper notes beside confusing terms like surge watts or usable battery capacity.</li>
+          <li><strong>Equipment page:</strong> small side illustration near “match the equipment to the job.”</li>
+          <li><strong>Not in every header:</strong> keep the top nav and main logo professional.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

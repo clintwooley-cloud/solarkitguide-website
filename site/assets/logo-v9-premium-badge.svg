@@ -1,0 +1,16 @@
+<svg width="360" height="86" viewBox="0 0 360 86" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">SolarKitGuide premium badge concept</title>
+  <defs>
+    <linearGradient id="badge" x1="8" y1="6" x2="76" y2="78" gradientUnits="userSpaceOnUse"><stop stop-color="#0D6B4F"/><stop offset="1" stop-color="#064432"/></linearGradient>
+  </defs>
+  <g>
+    <rect x="8" y="8" width="70" height="70" rx="22" fill="url(#badge)"/>
+    <path d="M23 42c0-11 9-20 20-20s20 9 20 20" stroke="#F8B931" stroke-width="7" stroke-linecap="round"/>
+    <path d="M20 50h46l-7 14H27l-7-14Z" fill="#DDF2E9"/>
+    <path d="M30 52l3 10M43 52v10M56 52l-3 10" stroke="#0D6B4F" stroke-width="2" stroke-linecap="round"/>
+    <path d="M43 13v5M43 68v5M73 43h-5M18 43h-5" stroke="#F8B931" stroke-width="3" stroke-linecap="round" opacity="0.95"/>
+  </g>
+  <text x="96" y="46" fill="#10231D" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="950" letter-spacing="-1.6">SolarKitGuide</text>
+  <rect x="99" y="57" width="175" height="5" rx="2.5" fill="#F8B931"/>
+  <text x="282" y="62" fill="#5F716A" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="850" letter-spacing="1.2">BUYER GUIDE</text>
+</svg>
