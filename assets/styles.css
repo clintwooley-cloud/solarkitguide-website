@@ -85,6 +85,11 @@ h3 { font-size: 22px; letter-spacing: -.03em; }
 .primary { color: white; background: var(--leaf); box-shadow: 0 12px 30px rgba(13,107,79,.22); }
 .secondary { background: white; border: 1px solid var(--line); }
 .trust-note { color: var(--muted); font-size: 14px; }
+.mascot-callout { display: grid; grid-template-columns: 72px minmax(0,1fr); gap: 14px; align-items: center; max-width: 780px; margin: 18px 0; padding: 14px 16px; border: 1px solid #f1d78f; border-radius: 22px; background: #fff8e5; color: #4c3a13; line-height: 1.5; box-shadow: 0 12px 28px rgba(94, 67, 12, .08); }
+.mascot-callout img { width: 72px; height: auto; display: block; }
+.mascot-callout strong { display: block; color: var(--leaf-dark); margin-bottom: 2px; }
+.mascot-callout p { margin: 0; font-size: 14px; }
+.content-card .mascot-callout { max-width: none; margin: 18px 0 0; }
 .hero-card, .results-panel, .calc-form, .cards article, .guide-section, .partner-section {
   background: rgba(255,255,255,.88);
   border: 1px solid var(--line);
@@ -170,6 +175,8 @@ button.ghost { background: white; border: 1px solid var(--line); }
   .site-header { padding: 16px clamp(18px, 4vw, 56px); }
   nav { display: none; }
   .start-here-pill { display: none; }
+  .mascot-callout { grid-template-columns: 54px minmax(0,1fr); }
+  .mascot-callout img { width: 54px; }
   .two-col, .result-grid, .check-grid { grid-template-columns: 1fr; }
   .mode-tabs { width: 100%; border-radius: 22px; }
   .tab { flex: 1 1 100%; }
