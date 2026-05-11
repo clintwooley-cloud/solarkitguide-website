@@ -27,7 +27,7 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px clamp(18px, 4vw, 56px) 28px;
+  padding: 16px clamp(18px, 4vw, 56px) 34px;
   backdrop-filter: blur(14px);
   background: rgba(255, 250, 240, .86);
   border-bottom: 1px solid rgba(220, 231, 223, .75);
@@ -44,7 +44,7 @@ nav a:hover { color: var(--leaf); }
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-  padding: 4px 8px;
+  padding: 4px 28px 4px 8px;
   border-radius: 999px;
   background: #fff7df;
   border: 1px solid #f2d38a;
@@ -53,6 +53,18 @@ nav a:hover { color: var(--leaf); }
   font-weight: 900;
   letter-spacing: .01em;
   box-shadow: 0 8px 18px rgba(94, 67, 12, .1);
+}
+.start-here-pill::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  bottom: -10px;
+  width: 26px;
+  height: 26px;
+  background: url('mascot-wattson-bee.svg') center / contain no-repeat;
+  transform: rotate(8deg);
+  filter: drop-shadow(0 4px 6px rgba(94, 67, 12, .18));
+  pointer-events: none;
 }
 .start-here-pill:hover { color: var(--leaf-dark); border-color: #cfe8dc; background: var(--mint); }
 main { overflow: hidden; }
@@ -96,7 +108,7 @@ h3 { font-size: 22px; letter-spacing: -.03em; }
   border-radius: 28px;
   box-shadow: var(--shadow);
 }
-.hero-card { padding: 28px; transform: rotate(1.5deg); }
+.hero-card { padding: 28px; transform: rotate(3deg); }
 .calculator-shell { padding: 42px clamp(18px, 5vw, 72px); }
 .section-heading { max-width: 780px; margin-bottom: 24px; }
 .section-heading p { color: var(--muted); line-height: 1.6; }
