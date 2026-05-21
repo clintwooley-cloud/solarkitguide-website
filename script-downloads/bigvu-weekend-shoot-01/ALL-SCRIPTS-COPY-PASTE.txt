@@ -1,0 +1,233 @@
+# 01-stop-buying-random-solar-kits
+
+Stop buying random solar kits before you know what you actually need.
+
+A solar kit that works great for one person may be completely wrong for your cabin, RV, shed, or backup power setup.
+
+The big question is not “how many panels should I buy?”
+
+The real question is: what are you trying to run, how many hours do you need it to run, and how much sunlight can you count on?
+
+That decides your battery size, inverter size, solar panel wattage, and charge controller.
+
+That’s why I built SolarKitGuide.com.
+
+Start with the free solar calculator, enter what you want to power, and use that as a starting point before you spend money on equipment.
+
+It won’t replace a professional design for a complicated system, but it will help you avoid the most common beginner mistake: buying parts before you know your load.
+
+Go to SolarKitGuide.com and start with the calculator.
+
+---
+
+# 02-200-watt-kit-reality-check
+
+A 200 watt solar kit is useful, but it is not magic.
+
+A lot of people see a 200 watt starter kit and think it can run a whole cabin.
+
+Usually, it cannot.
+
+A 200 watt kit is better for smaller loads: charging batteries, lights, fans, phones, a small fridge in the right conditions, or learning how a basic solar setup works.
+
+The real limit is not just the panel size. It is your battery capacity, your inverter, and how many watt-hours you use each day.
+
+That is why I like 200 watt kits as a starter setup, not as a promise that they will run everything.
+
+On SolarKitGuide.com, I have a beginner-friendly review of the Renogy 200 watt starter kit and where it makes sense.
+
+Some links may be affiliate links, which means the site may earn a commission at no extra cost to you.
+
+Before you buy, run your numbers through the free calculator at SolarKitGuide.com.
+
+---
+
+# 03-lithium-battery-charger-warning
+
+If you buy a lithium battery for solar, do not assume your old charger is fine.
+
+This is one of the easiest mistakes to make.
+
+LiFePO4 batteries need a lithium-compatible charging profile.
+
+That means your solar charge controller, AC wall charger, DC-to-DC charger, or RV converter needs to be set up for lithium or LiFePO4 charging.
+
+A lead-acid-only charger may use the wrong voltage profile, may not fully charge the battery, or may behave in a way that is not ideal for the battery long term.
+
+So before you upgrade to a 12 volt 100 amp-hour lithium battery, check the charger too.
+
+On SolarKitGuide.com, I explain this in the Renogy Core Mini 100Ah battery review and the 200 watt starter kit article.
+
+Some links may be affiliate links, which helps support the site at no extra cost to you.
+
+The battery matters, but the charger matters too.
+
+---
+
+# 04-solar-calculator-explainer
+
+Here is the simple way to size a small solar setup.
+
+First, list what you want to run.
+
+Second, estimate how many watts each item uses.
+
+Third, estimate how many hours per day you will use it.
+
+Watts times hours equals watt-hours.
+
+That number matters because batteries store energy in watt-hours, and solar panels replace those watt-hours when the sun is available.
+
+Then you add some margin, because real life is not perfect. Clouds happen. Panels are not always at the perfect angle. Inverters waste some energy.
+
+That is the basic idea behind the free calculator at SolarKitGuide.com.
+
+It helps you think in loads, battery capacity, solar panel wattage, and inverter size — instead of just guessing.
+
+If you are new to solar, start there before buying parts.
+
+---
+
+# 05-battery-before-panels
+
+For small solar systems, your battery can matter more than your panels.
+
+Panels collect energy, but the battery is what lets you use that energy later.
+
+If your battery is too small, you may run out of power overnight even if you have enough panels during the day.
+
+If your panels are too small, your battery may never fully recover after a cloudy day or heavy use.
+
+The system has to balance.
+
+For example, a 12 volt 100 amp-hour LiFePO4 battery is roughly around 1,280 watt-hours of stored energy.
+
+That sounds like a lot until you start adding refrigerators, fans, lights, laptops, or inverters.
+
+This is why I keep saying: calculate your loads first.
+
+SolarKitGuide.com has a free calculator and beginner guides to help you match the battery, panels, inverter, and charger.
+
+Do the math before buying the kit.
+
+---
+
+# 06-what-can-a-100ah-battery-run
+
+What can a 12 volt 100 amp-hour lithium battery actually run?
+
+A rough answer is this: it stores about 1,280 watt-hours.
+
+So if you had a device using 100 watts, in a perfect world that battery could run it for about 12.8 hours.
+
+But real life is not perfect.
+
+If you are using an inverter, you lose some power in the conversion. You also may not want to plan around draining everything to the absolute limit.
+
+So a 100Ah lithium battery is useful, but it is not unlimited.
+
+It can be great for lights, fans, device charging, small DC loads, and some fridge or backup setups depending on the actual power draw.
+
+The smart move is to list your loads and calculate watt-hours.
+
+I built SolarKitGuide.com to make that easier.
+
+Start with the calculator before you guess.
+
+---
+
+# 07-beginner-solar-mistakes
+
+Here are three beginner solar mistakes I would avoid.
+
+Number one: buying panels before calculating your loads.
+
+Number two: buying a lithium battery without checking whether your charger supports LiFePO4.
+
+Number three: sizing your inverter for one appliance, but forgetting what may run at the same time.
+
+Solar is not just panels.
+
+It is panels, batteries, charge controllers, inverters, wiring, fuses, and the actual stuff you want to power.
+
+If those parts do not match, the system will disappoint you.
+
+That is why SolarKitGuide.com is built around simple calculators and beginner-friendly guides.
+
+Use the calculator, read the basics, and then look at equipment.
+
+It is a lot cheaper to fix the plan than to fix the wrong purchase.
+
+---
+
+# 08-cabin-solar-starter
+
+If you are planning solar for a small cabin, start small on paper before you start spending money.
+
+Write down the basics.
+
+Lights.
+
+Phone charging.
+
+Wi-Fi or a router if you need it.
+
+A fan.
+
+A small refrigerator.
+
+Maybe a water pump.
+
+Then estimate how long each one runs per day.
+
+That gives you a daily energy target.
+
+From there, you can estimate battery capacity, panel wattage, inverter size, and how much margin you need for cloudy days.
+
+A cabin system can be simple, but guessing can get expensive fast.
+
+SolarKitGuide.com has a free solar calculator and beginner guides to help you plan before you buy.
+
+Start with the loads, not the panels.
+
+---
+
+# 09-affiliate-disclosure-short
+
+Quick disclosure about SolarKitGuide.com.
+
+Some of the product links on the site may be affiliate links.
+
+That means if you click a link and buy something, the site may earn a commission at no extra cost to you.
+
+The goal is not to push random products.
+
+The goal is to explain what the equipment does, who it is a fit for, who it is not a fit for, and what you need to check before buying.
+
+Solar can get confusing quickly, especially with batteries, chargers, controllers, and inverters.
+
+So I am trying to make the site useful first.
+
+If the guides help you and you buy through one of the links, it supports the project.
+
+Start with the free calculator at SolarKitGuide.com.
+
+---
+
+# 10-youtube-intro-channel
+
+Welcome to SolarKitGuide.
+
+This project is built for people who are interested in solar but do not want to drown in jargon.
+
+If you are trying to power a cabin, RV, shed, backup system, or small off-grid setup, the goal is to help you understand the basics before you buy equipment.
+
+We will talk about solar panels, batteries, charge controllers, inverters, LiFePO4 batteries, starter kits, and common mistakes.
+
+The website has a free calculator so you can estimate your loads and get a better sense of what size system you may need.
+
+Some product links may be affiliate links, which helps support the site at no extra cost to you.
+
+If you are new to solar, start with the calculator and the beginner guides at SolarKitGuide.com.
+
+Then use the videos here to go deeper one topic at a time.
