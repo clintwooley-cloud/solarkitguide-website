@@ -86,6 +86,10 @@ h3 { font-size: 22px; letter-spacing: -.03em; }
 .article-meta span + span::before { content: '•'; margin-right: 14px; color: var(--sun-dark); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 18px; }
 .result-actions { margin: 16px 0 10px; }
+.result-product-grid { margin: 10px 0 18px; }
+.results-panel .product-card { padding: 18px; border-radius: 20px; }
+.results-panel .product-card h4 { margin: 8px 0 8px; font-size: 20px; }
+.results-panel .product-card ul { margin-bottom: 0; }
 .button, button {
   border: 0;
   border-radius: 999px;

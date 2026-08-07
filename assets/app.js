@@ -102,7 +102,7 @@ function systemVoltage(inverterWatts, arrayWatts) {
   return '48V';
 }
 
-function setResults(title, items, recommendation, shopping, assumptions = [], ctas = []) {
+function setResults(title, items, recommendation, shopping, assumptions = [], ctas = [], products = []) {
   $('#resultTitle').textContent = title;
   $('#resultGrid').innerHTML = items.map(([value, label]) => `<div><strong>${value}</strong><span>${label}</span></div>`).join('');
   $('#recommendation').innerHTML = recommendation;
@@ -110,6 +110,22 @@ function setResults(title, items, recommendation, shopping, assumptions = [], ct
   const ctaBox = $('#resultCtas');
   if (ctaBox) {
     ctaBox.innerHTML = ctas.map(cta => `<a class="button ${cta.style || 'secondary'}" href="${cta.href}">${cta.label}</a>`).join('');
+  }
+  const productsBox = $('#resultProducts');
+  if (productsBox) {
+    productsBox.innerHTML = products.length ? products.map(product => `
+      <article class="product-card${product.sample ? ' sample-product-card' : ''}">
+        ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+        <h4>${product.title}</h4>
+        ${product.fit ? `<p class="product-fit">${product.fit}</p>` : ''}
+        ${product.bullets?.length ? `<ul>${product.bullets.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
+        ${product.callout ? `<div class="price-callout">${product.callout}</div>` : ''}
+        <div class="hero-actions">
+          <a class="button ${product.primary?.style || 'primary'}" href="${product.primary.href}">${product.primary.label}</a>
+          ${product.secondary ? `<a class="button ${product.secondary.style || 'secondary'}" href="${product.secondary.href}">${product.secondary.label}</a>` : ''}
+        </div>
+      </article>
+    `).join('') : '';
   }
   const assumptionBox = $('#assumptionsUsed');
   if (assumptionBox) {
@@ -266,6 +282,25 @@ function calculateBill() {
     ], [
       { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
       { label: 'Learn home solar basics', href: 'solar-power-system-basics/' }
+    ], [
+      {
+        badge: 'Best next step',
+        title: 'Home solar gear categories',
+        fit: 'Start here if this result points you toward a larger rooftop or hybrid system rather than a small off-grid kit.',
+        bullets: ['See how to compare panels, batteries, inverters, and system classes', 'Better for narrowing the type of gear before chasing individual products'],
+        callout: 'Use this when you need the right class of system before comparing brands.',
+        primary: { label: 'Browse equipment page', href: 'equipment/' },
+        secondary: { label: 'Read solar basics', href: 'solar-power-system-basics/' }
+      },
+      {
+        badge: 'Sizing guide',
+        title: 'Home solar sizing guide',
+        fit: 'Use this if you want a little more context before comparing installed-system gear.',
+        bullets: ['Good follow-up for bill-based or appliance-list home estimates', 'Helps frame array size, inverter class, and battery expectations'],
+        callout: 'Useful when you want to sanity-check the size range before shopping.',
+        primary: { label: 'Read sizing guide', href: 'solar-kit-size-calculator/' },
+        secondary: { label: 'See equipment categories', href: 'equipment/' }
+      }
     ]);
     setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, batteryKwh: battery.kwh, inverterW, voltage });
     return;
@@ -297,6 +332,25 @@ function calculateBill() {
   ], [
     { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
     { label: 'Read home solar guide', href: 'solar-kit-size-calculator/' }
+  ], [
+    {
+      badge: 'Best next step',
+      title: 'Home solar gear categories',
+      fit: 'Start here if you want to turn this bill-based result into realistic equipment categories.',
+      bullets: ['Compare hybrid vs grid-tie paths', 'See what kind of battery and inverter class fits this size tier'],
+      callout: 'Better for narrowing your options before you compare specific products.',
+      primary: { label: 'Browse equipment page', href: 'equipment/' },
+      secondary: { label: 'Read home solar guide', href: 'solar-kit-size-calculator/' }
+    },
+    {
+      badge: 'Buying path',
+      title: 'Solar basics before you buy',
+      fit: 'Use this if you want the plain-English version before comparing home solar gear.',
+      bullets: ['Panels, batteries, inverters, and system types explained', 'Useful if you are still deciding between basic grid-tie and hybrid backup'],
+      callout: 'Helpful when you want the concepts to feel less abstract before shopping.',
+      primary: { label: 'Read solar basics', href: 'solar-power-system-basics/' },
+      secondary: { label: 'Browse gear categories', href: 'equipment/' }
+    }
   ]);
   setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, batteryKwh: battery.kwh, inverterW, voltage });
 }
@@ -339,6 +393,25 @@ function calculateEV() {
   ], [
     { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
     { label: 'Read the EV solar guide', href: 'how-much-solar-power-do-i-need-to-charge-my-ev/' }
+  ], [
+    {
+      badge: 'Best next step',
+      title: 'Home solar gear categories',
+      fit: 'Most EV-charging solar decisions still point back to a home solar or hybrid setup rather than a small portable unit.',
+      bullets: ['Use this to compare the right equipment class for added solar production', 'Good for deciding whether battery storage even matters for your EV goal'],
+      callout: 'EV charging usually starts with the house-side solar plan, not a gadget purchase.',
+      primary: { label: 'Browse equipment page', href: 'equipment/' },
+      secondary: { label: 'Read EV solar guide', href: 'how-much-solar-power-do-i-need-to-charge-my-ev/' }
+    },
+    {
+      badge: 'Foundational guide',
+      title: 'Solar basics before comparing gear',
+      fit: 'Use this if you need a cleaner mental model before moving into equipment choices.',
+      bullets: ['Explains the parts of a solar system in plain English', 'Helps make EV add-on sizing feel less disconnected from the rest of the system'],
+      callout: 'Good if you are early and still translating the math into buying decisions.',
+      primary: { label: 'Read solar basics', href: 'solar-power-system-basics/' },
+      secondary: { label: 'Browse gear categories', href: 'equipment/' }
+    }
   ]);
   setVisualPlan({ mode: 'ev', arrayW: roundedKw * 1000, inverterW: roundedKw * 1000, voltage: systemVoltage(roundedKw * 1000, roundedKw * 1000), solar: true });
 }
@@ -405,6 +478,25 @@ function calculateLoad() {
   ], [
     { label: 'See cabin/off-grid kit ideas', href: 'best-solar-kits-for-cabins/', style: 'primary' },
     { label: 'Browse equipment categories', href: 'equipment/' }
+  ], [
+    {
+      badge: 'Starter kit path',
+      title: 'Best solar kits for cabins and tiny homes',
+      fit: 'Strong next click if this result is for a cabin, RV, shed, or small off-grid build and you want realistic kit classes.',
+      bullets: ['Compare system tiers instead of random starter kits', 'Good for matching your result to a more realistic buying range'],
+      callout: 'This is the best “what should I shop next?” page for most off-grid results.',
+      primary: { label: 'See kit comparisons', href: 'best-solar-kits-for-cabins/' },
+      secondary: { label: 'Browse equipment page', href: 'equipment/' }
+    },
+    {
+      badge: 'Beginner kit example',
+      title: 'Renogy 200W 12V starter kit review',
+      fit: 'Useful if your loads are small and you want to see what an entry-level kit can and cannot realistically do.',
+      bullets: ['Better for light-duty loads than full cabin or heavy inverter use', 'Helps readers avoid assuming a starter kit can run more than it really can'],
+      callout: 'Good reality check before buying a small 12V kit.',
+      primary: { label: 'Read Renogy review', href: 'renogy-200w-12v-starter-kit-review/' },
+      secondary: { label: 'See cabin kit tiers', href: 'best-solar-kits-for-cabins/' }
+    }
   ]);
   setVisualPlan({ mode: 'load', arrayW, batteryKwh, inverterW, voltage });
 }
@@ -445,6 +537,44 @@ function calculateBackup() {
   ] : [
     { label: 'Browse home backup gear', href: 'equipment/', style: 'primary' },
     { label: 'Read inverter sizing guide', href: 'inverter-size-calculator/' }
+  ], portable ? [
+    {
+      badge: 'Portable backup fit',
+      title: 'BLUETTI Elite 200 V2 review',
+      fit: 'Good next click if this backup result still looks portable-power-station sized and you want more runtime than a 1kWh unit.',
+      bullets: ['Useful for outage essentials, RV use, and selected home loads', 'Better fit when you need more runtime but not a full installed system'],
+      callout: 'One of the stronger “serious but still portable” backup options on the site.',
+      primary: { label: 'Read Elite 200 V2 review', href: 'bluetti-elite-200-v2-review/' },
+      secondary: { label: 'Browse equipment page', href: 'equipment/' }
+    },
+    {
+      badge: 'Alternative pick',
+      title: 'Anker SOLIX C2000 Gen 2 review',
+      fit: 'Another strong next click if you want a 2kWh-class backup option to compare side by side.',
+      bullets: ['Worth comparing for output, runtime, and storm-prep use', 'Good when you are narrowing down portable backup instead of building from components'],
+      callout: 'Useful comparison page if you are cross-shopping larger portable stations.',
+      primary: { label: 'Read Anker C2000 review', href: 'anker-solix-c2000-gen-2-review/' },
+      secondary: { label: 'Compare backup gear', href: 'equipment/' }
+    }
+  ] : [
+    {
+      badge: 'Installed backup path',
+      title: 'Home backup gear categories',
+      fit: 'Better next click if your result outgrew portable stations and now points toward a larger inverter/battery setup.',
+      bullets: ['Use this to narrow the equipment class before comparing brands', 'Good for sorting battery, inverter, and system-type decisions'],
+      callout: 'This is usually the better path once pumps, AC, or longer runtimes enter the picture.',
+      primary: { label: 'Browse equipment page', href: 'equipment/' },
+      secondary: { label: 'Read inverter guide', href: 'inverter-size-calculator/' }
+    },
+    {
+      badge: 'Sizing help',
+      title: 'Inverter size guide',
+      fit: 'Useful if the main question is whether surge loads or running watts are pushing you into a larger system.',
+      bullets: ['Helps explain why backup systems jump in price and complexity', 'Good before comparing inverters or hybrid backup hardware'],
+      callout: 'Best follow-up when the inverter class is the part that surprised you.',
+      primary: { label: 'Read inverter guide', href: 'inverter-size-calculator/' },
+      secondary: { label: 'Browse gear categories', href: 'equipment/' }
+    }
   ]);
   setVisualPlan({ mode: 'backup', arrayW, batteryKwh, inverterW, voltage: portable ? '24V' : '48V', solar: Boolean(solar) });
 }
