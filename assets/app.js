@@ -102,11 +102,15 @@ function systemVoltage(inverterWatts, arrayWatts) {
   return '48V';
 }
 
-function setResults(title, items, recommendation, shopping, assumptions = []) {
+function setResults(title, items, recommendation, shopping, assumptions = [], ctas = []) {
   $('#resultTitle').textContent = title;
   $('#resultGrid').innerHTML = items.map(([value, label]) => `<div><strong>${value}</strong><span>${label}</span></div>`).join('');
   $('#recommendation').innerHTML = recommendation;
   $('#shoppingList').innerHTML = shopping.map(item => `<li>${item}</li>`).join('');
+  const ctaBox = $('#resultCtas');
+  if (ctaBox) {
+    ctaBox.innerHTML = ctas.map(cta => `<a class="button ${cta.style || 'secondary'}" href="${cta.href}">${cta.label}</a>`).join('');
+  }
   const assumptionBox = $('#assumptionsUsed');
   if (assumptionBox) {
     assumptionBox.innerHTML = assumptions.length ? `<h4>Assumptions used</h4><ul>${assumptions.map(item => `<li>${item}</li>`).join('')}</ul>` : '';
@@ -250,7 +254,7 @@ function calculateBill() {
       battery.kwh > 0 ? `${kwh(battery.kwh)} nominal battery storage for ${battery.label}` : 'No battery storage selected',
       `Annual target production: about ${fmt(annualKwh)} kWh`
     ], [
-      `Calculation method: full-home appliance loads`
+      `Calculation method: full-home appliance loads`,
       `Estimated monthly use from entered loads: ${fmt(monthlyKwh)} kWh`,
       `Peak sun hours: ${sun}`,
       `Loss factor: ${fmt((loss - 1) * 100)}%`,
@@ -259,6 +263,9 @@ function calculateBill() {
       `Entered simultaneous running load: about ${watts(stats.possibleRunningWatts)}`,
       `Largest startup load entered: about ${watts(stats.largestStartupWatts)}`,
       'Load-based estimates depend heavily on realistic hours/day and duty cycle settings'
+    ], [
+      { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
+      { label: 'Learn home solar basics', href: 'solar-power-system-basics/' }
     ]);
     setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, batteryKwh: battery.kwh, inverterW, voltage });
     return;
@@ -287,6 +294,9 @@ function calculateBill() {
     `Panel wattage: ${fmt(panelWatts)}W`,
     `Battery assumption: ${battery.note}; nominal target assumes roughly 85% usable capacity`,
     'Bill method may include fixed fees/taxes, so exact kWh is better when available'
+  ], [
+    { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
+    { label: 'Read home solar guide', href: 'solar-kit-size-calculator/' }
   ]);
   setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, batteryKwh: battery.kwh, inverterW, voltage });
 }
@@ -326,6 +336,9 @@ function calculateEV() {
     `Peak sun hours: ${sun}`,
     'Solar array includes a 25% production/loss buffer',
     'This offsets energy over time; charging directly from solar in real time requires matching charger timing, inverter capacity, and utility/net-metering rules'
+  ], [
+    { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
+    { label: 'Read the EV solar guide', href: 'how-much-solar-power-do-i-need-to-charge-my-ev/' }
   ]);
   setVisualPlan({ mode: 'ev', arrayW: roundedKw * 1000, inverterW: roundedKw * 1000, voltage: systemVoltage(roundedKw * 1000, roundedKw * 1000), solar: true });
 }
@@ -389,6 +402,9 @@ function calculateLoad() {
     'Solar array includes a 25% production/loss buffer',
     `Inverter class considers running watts plus a startup scenario of about ${watts(worstStartupScenario)}`,
     'Startup watts are estimates; check appliance nameplates and manufacturer locked-rotor/startup specs before buying'
+  ], [
+    { label: 'See cabin/off-grid kit ideas', href: 'best-solar-kits-for-cabins/', style: 'primary' },
+    { label: 'Browse equipment categories', href: 'equipment/' }
   ]);
   setVisualPlan({ mode: 'load', arrayW, batteryKwh, inverterW, voltage });
 }
@@ -423,6 +439,12 @@ function calculateBackup() {
     `Estimated simultaneous running load: ${watts(runningWatts)}`,
     `Largest startup surge allowance: ${watts(surgeWatts)}`,
     solar ? `Solar recharge assumes ${sun} peak sun hours and a 30% buffer` : 'Solar recharge disabled'
+  ], portable ? [
+    { label: 'See portable power station reviews', href: 'equipment/', style: 'primary' },
+    { label: 'Compare 2kWh backup options', href: 'bluetti-elite-200-v2-review/' }
+  ] : [
+    { label: 'Browse home backup gear', href: 'equipment/', style: 'primary' },
+    { label: 'Read inverter sizing guide', href: 'inverter-size-calculator/' }
   ]);
   setVisualPlan({ mode: 'backup', arrayW, batteryKwh, inverterW, voltage: portable ? '24V' : '48V', solar: Boolean(solar) });
 }
