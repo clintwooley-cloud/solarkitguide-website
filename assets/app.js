@@ -102,6 +102,13 @@ function systemVoltage(inverterWatts, arrayWatts) {
   return '48V';
 }
 
+function ctaDataAttrs(cta = {}, fallbackLocation = 'calculator_result') {
+  const track = (cta.track || cta.label || 'cta').replace(/"/g, '&quot;');
+  const location = (cta.location || fallbackLocation).replace(/"/g, '&quot;');
+  const type = (cta.type || 'click').replace(/"/g, '&quot;');
+  return ` data-cta-track="${track}" data-cta-location="${location}" data-cta-type="${type}"`;
+}
+
 function setResults(title, items, recommendation, shopping, assumptions = [], ctas = [], products = []) {
   $('#resultTitle').textContent = title;
   $('#resultGrid').innerHTML = items.map(([value, label]) => `<div><strong>${value}</strong><span>${label}</span></div>`).join('');
@@ -109,7 +116,7 @@ function setResults(title, items, recommendation, shopping, assumptions = [], ct
   $('#shoppingList').innerHTML = shopping.map(item => `<li>${item}</li>`).join('');
   const ctaBox = $('#resultCtas');
   if (ctaBox) {
-    ctaBox.innerHTML = ctas.map(cta => `<a class="button ${cta.style || 'secondary'}" href="${cta.href}">${cta.label}</a>`).join('');
+    ctaBox.innerHTML = ctas.map(cta => `<a class="button ${cta.style || 'secondary'}" href="${cta.href}"${ctaDataAttrs(cta, 'calculator_result_button')}>${cta.label}</a>`).join('');
   }
   const productsBox = $('#resultProducts');
   if (productsBox) {
@@ -121,8 +128,8 @@ function setResults(title, items, recommendation, shopping, assumptions = [], ct
         ${product.bullets?.length ? `<ul>${product.bullets.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
         ${product.callout ? `<div class="price-callout">${product.callout}</div>` : ''}
         <div class="hero-actions">
-          <a class="button ${product.primary?.style || 'primary'}" href="${product.primary.href}">${product.primary.label}</a>
-          ${product.secondary ? `<a class="button ${product.secondary.style || 'secondary'}" href="${product.secondary.href}">${product.secondary.label}</a>` : ''}
+          <a class="button ${product.primary?.style || 'primary'}" href="${product.primary.href}"${ctaDataAttrs({ ...product.primary, track: product.primary.track || `${product.title} - ${product.primary.label}` }, 'calculator_result_product')}>${product.primary.label}</a>
+          ${product.secondary ? `<a class="button ${product.secondary.style || 'secondary'}" href="${product.secondary.href}"${ctaDataAttrs({ ...product.secondary, track: product.secondary.track || `${product.title} - ${product.secondary.label}` }, 'calculator_result_product')}>${product.secondary.label}</a>` : ''}
         </div>
       </article>
     `).join('') : '';
@@ -653,6 +660,19 @@ $('#addHomeAppliance')?.addEventListener('click', () => {
   $('#homeApplianceRows').insertAdjacentHTML('beforeend', applianceRow(row, Date.now()));
   bindInputs();
   calculateBill();
+});
+
+document.addEventListener('click', event => {
+  const link = event.target.closest('[data-cta-track]');
+  if (!link) return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'sg_cta_click',
+    cta_name: link.dataset.ctaTrack || '',
+    cta_location: link.dataset.ctaLocation || '',
+    cta_type: link.dataset.ctaType || '',
+    cta_destination: link.getAttribute('href') || ''
+  });
 });
 
 renderAppliances(presets.cabin);
