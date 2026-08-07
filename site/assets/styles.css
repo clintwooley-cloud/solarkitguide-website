@@ -85,6 +85,7 @@ h3 { font-size: 22px; letter-spacing: -.03em; }
 .article-meta span { display: inline-flex; align-items: center; }
 .article-meta span + span::before { content: '•'; margin-right: 14px; color: var(--sun-dark); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 18px; }
+.result-actions { margin: 16px 0 10px; }
 .button, button {
   border: 0;
   border-radius: 999px;
