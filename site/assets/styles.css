@@ -263,6 +263,7 @@ button.ghost { background: white; border: 1px solid var(--line); }
 .equipment-reference-figure figcaption { margin-top: 8px; color: var(--muted); font-size: 13px; line-height: 1.45; }
 .text-link { color: var(--leaf-dark); font-weight: 850; text-decoration: none; }
 .text-link:hover { color: var(--leaf); }
+.product-recommendation-flag { display: inline-flex; margin-bottom: 10px; padding: 6px 10px; border-radius: 999px; background: #0f6b46; color: #fff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
 .product-badge { display: inline-flex; padding: 5px 9px; border-radius: 999px; background: var(--mint); color: var(--leaf-dark); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
 .product-fit { font-weight: 750; }
 .price-callout { margin: 14px 0; padding: 12px 14px; border-radius: 16px; background: #fff8e5; border: 1px solid #f1d78f; color: #5b4210; font-weight: 800; line-height: 1.45; }

@@ -122,6 +122,7 @@ function setResults(title, items, recommendation, shopping, assumptions = [], ct
   if (productsBox) {
     productsBox.innerHTML = products.length ? products.map(product => `
       <article class="product-card${product.sample ? ' sample-product-card' : ''}">
+        ${product.recommended ? `<span class="product-recommendation-flag">Recommended for your result</span>` : ''}
         ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
         <h4>${product.title}</h4>
         ${product.fit ? `<p class="product-fit">${product.fit}</p>` : ''}
@@ -338,9 +339,9 @@ function uniqueProducts(cards = []) {
 }
 
 function homeSolarRecommendations({ roundedKw, batteryKwh, inverterW }) {
-  const cards = [productCard('equipmentGuide')];
-  if (batteryKwh >= 10 || roundedKw >= 6 || inverterW >= 6000) {
-    cards.push(productCard('homeSizingGuide'));
+  const cards = [productCard('equipmentGuide', { recommended: true })];
+  if (batteryKwh >= 5 || roundedKw >= 4.5 || inverterW >= 5000) {
+    cards.push(productCard('homeSizingGuide', { recommended: true }));
   } else {
     cards.push(productCard('inverterGuide', {
       badge: 'Planning guide',
@@ -351,50 +352,84 @@ function homeSolarRecommendations({ roundedKw, batteryKwh, inverterW }) {
 }
 
 function offGridRecommendations({ arrayW, batteryKwh, inverterW, voltage }) {
-  const cards = [productCard('cabinGuide')];
-  if (voltage === '12V' && arrayW <= 400 && batteryKwh <= 1.6 && inverterW <= 1500) {
-    cards.push(productCard('renogyStarter'), productCard('renogyBattery'));
-  } else if (batteryKwh <= 1.6 && inverterW <= 2200) {
-    cards.push(productCard('ankerC1000'), productCard('renogyStarter'));
-  } else if (batteryKwh <= 4.5 && inverterW <= 3000) {
-    cards.push(productCard('ankerC2000'), productCard('elite200'));
-  } else {
-    cards.push(productCard('equipmentGuide', {
+  if (voltage === '12V' && arrayW <= 300 && batteryKwh <= 1.35 && inverterW <= 1200) {
+    return uniqueProducts([
+      productCard('renogyStarter', { recommended: true }),
+      productCard('renogyBattery', { recommended: true }),
+      productCard('cabinGuide')
+    ]);
+  }
+  if (arrayW <= 700 && batteryKwh <= 1.8 && inverterW <= 2000) {
+    return uniqueProducts([
+      productCard('ankerC1000', { recommended: true }),
+      productCard('cabinGuide'),
+      productCard('renogyStarter')
+    ]);
+  }
+  if (batteryKwh <= 3.2 && inverterW <= 2600) {
+    return uniqueProducts([
+      productCard('ankerC2000', { recommended: true }),
+      productCard('elite200', { recommended: true }),
+      productCard('cabinGuide')
+    ]);
+  }
+  return uniqueProducts([
+    productCard('equipmentGuide', {
+      recommended: true,
       badge: 'Larger-system path',
-      fit: 'This result is pushing beyond simple starter kits, so category-level comparison is more useful than a tiny kit recommendation.',
+      fit: 'This result is pushing beyond simple starter kits, so category-level comparison is more useful than a small product recommendation.',
       primary: { label: 'Browse equipment page', href: 'equipment/' },
       secondary: { label: 'Read inverter guide', href: 'inverter-size-calculator/' }
-    }));
-  }
-  return uniqueProducts(cards).slice(0, 3);
+    }),
+    productCard('cabinGuide')
+  ]).slice(0, 3);
 }
 
 function backupRecommendations({ portable, batteryKwh, inverterW, hours, solar }) {
   if (!portable) {
     return uniqueProducts([
       productCard('equipmentGuide', {
+        recommended: true,
         badge: 'Installed backup path',
         fit: 'This result points toward larger home backup gear instead of a typical portable station.'
       }),
       productCard('inverterGuide')
     ]);
   }
-  if (batteryKwh <= 1.5 && inverterW <= 2000 && hours <= 18) {
-    return uniqueProducts([productCard('ac180'), productCard('ankerC1000'), productCard('elite100')]);
+  if (batteryKwh <= 1.2 && inverterW <= 1800 && hours <= 12) {
+    return uniqueProducts([
+      productCard('ac180', { recommended: true }),
+      productCard('ankerC1000', { recommended: true }),
+      productCard('elite100')
+    ]);
   }
-  if (batteryKwh <= 3.2 && inverterW <= 2600) {
-    return uniqueProducts([productCard('ankerC2000'), productCard('elite200'), solar ? productCard('equipmentGuide', { badge: 'Buying path' }) : productCard('inverterGuide', { badge: 'Backup planning' })]);
+  if (batteryKwh <= 2.6 && inverterW <= 2400 && hours <= 24) {
+    return uniqueProducts([
+      productCard('ankerC2000', { recommended: true }),
+      productCard('elite200', { recommended: true }),
+      solar ? productCard('equipmentGuide', { badge: 'Buying path' }) : productCard('inverterGuide', { badge: 'Backup planning' })
+    ]);
   }
-  return uniqueProducts([productCard('ankerC2000'), productCard('elite200'), productCard('equipmentGuide', { badge: 'Compare backup categories' })]);
+  return uniqueProducts([
+    productCard('equipmentGuide', {
+      recommended: true,
+      badge: 'Compare backup categories',
+      fit: 'This result is close enough to larger backup territory that a category-level comparison is safer than a narrow product push.'
+    }),
+    productCard('ankerC2000'),
+    productCard('elite200')
+  ]);
 }
 
 function evRecommendations() {
   return uniqueProducts([
     productCard('equipmentGuide', {
+      recommended: true,
       fit: 'Most EV-charging solar decisions still start with the house-side solar plan, not a gadget purchase.'
     }),
     productCard('homeSizingGuide', {
       badge: 'Home solar path',
+      recommended: true,
       fit: 'Useful if this EV result is making you think about a broader home solar upgrade.'
     })
   ]);
