@@ -122,6 +122,7 @@ function setResults(title, items, recommendation, shopping, assumptions = [], ct
   if (productsBox) {
     productsBox.innerHTML = products.length ? products.map(product => `
       <article class="product-card${product.sample ? ' sample-product-card' : ''}">
+        ${product.recommended ? `<span class="product-recommendation-flag">Recommended for your result</span>` : ''}
         ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
         <h4>${product.title}</h4>
         ${product.fit ? `<p class="product-fit">${product.fit}</p>` : ''}
@@ -211,6 +212,229 @@ function setVisualPlan({ mode, arrayW = 0, batteryKwh = 0, inverterW = 0, voltag
   $('#panelDiagram').innerHTML = panelWiring(arrayW, voltage, mode !== 'backup' || solar);
 }
 
+const recommendationCatalog = {
+  equipmentGuide: {
+    badge: 'Best next step',
+    title: 'Equipment guide',
+    fit: 'Use this to jump from sizing math into the right category before chasing random products.',
+    bullets: ['Compare portable power, off-grid kits, home backup, and total-home solar paths', 'Helpful when the result is more about system class than one specific SKU'],
+    callout: 'This is the cleanest bridge from calculator result to shopping path.',
+    primary: { label: 'Browse equipment page', href: 'equipment/' },
+    secondary: { label: 'Read solar basics', href: 'solar-power-system-basics/' }
+  },
+  homeSizingGuide: {
+    badge: 'Sizing guide',
+    title: 'Home solar sizing guide',
+    fit: 'Useful when you want more context before comparing larger home solar and battery setups.',
+    bullets: ['Good for array size, inverter class, and battery expectation sanity checks', 'Better fit than a portable product review when the system is house-scale'],
+    callout: 'Best when the result is pushing into installed-system territory.',
+    primary: { label: 'Read sizing guide', href: 'solar-kit-size-calculator/' },
+    secondary: { label: 'Browse equipment page', href: 'equipment/' }
+  },
+  inverterGuide: {
+    badge: 'Sizing help',
+    title: 'Inverter size guide',
+    fit: 'Use this when surge loads, pumps, or AC are driving the system size more than daily energy alone.',
+    bullets: ['Helps explain why inverter class changes cost and complexity fast', 'Useful before comparing larger backup or hybrid systems'],
+    callout: 'A good checkpoint before buying the wrong inverter tier.',
+    primary: { label: 'Read inverter guide', href: 'inverter-size-calculator/' },
+    secondary: { label: 'Browse equipment page', href: 'equipment/' }
+  },
+  cabinGuide: {
+    badge: 'Starter kit path',
+    title: 'Best solar kits for cabins and tiny homes',
+    fit: 'Strong next click for cabins, RVs, sheds, and small off-grid builds when you want realistic kit classes.',
+    bullets: ['Compares system tiers instead of random starter kits', 'Better for matching the result to a believable buying range'],
+    callout: 'Usually the best follow-up for off-grid results.',
+    primary: { label: 'See kit comparisons', href: 'best-solar-kits-for-cabins/' },
+    secondary: { label: 'Browse equipment page', href: 'equipment/' }
+  },
+  renogyStarter: {
+    badge: 'Beginner kit example',
+    title: 'Renogy 200W 12V Starter Kit',
+    fit: 'Best for very small loads, battery charging, sheds, light RV use, and readers still in true starter-kit territory.',
+    bullets: ['Not a full cabin power system by itself', 'Good when the result is still light-duty and 12V-friendly'],
+    callout: 'A useful reality check before overspending or overexpecting.',
+    primary: { label: 'Check kit price', href: 'https://renogy.sjv.io/qWyNdj' },
+    secondary: { label: 'Read kit review', href: 'renogy-200w-12v-starter-kit-review/' }
+  },
+  renogyBattery: {
+    badge: 'Starter battery',
+    title: 'Renogy Core Mini 12V 100Ah Battery',
+    fit: 'Fits small 12V starter systems better than heavier off-grid or home-backup builds.',
+    bullets: ['Roughly 1.28kWh nominal storage', 'Better for modest loads than serious backup runtime'],
+    callout: 'Good add-on when the result still lands in small 12V territory.',
+    primary: { label: 'Check battery price', href: 'https://renogy.sjv.io/4aEK1Z' },
+    secondary: { label: 'Read battery review', href: 'renogy-core-mini-12v-100ah-lithium-battery-review/' }
+  },
+  ac180: {
+    badge: 'Portable power station',
+    title: 'BLUETTI AC180',
+    fit: 'Good for lighter backup loads, camping, RV weekends, fridge support, routers, and small appliance use.',
+    bullets: ['1,152Wh battery and 1,800W AC output', 'Good when a tiny power bank is too small but a 2kWh unit may be overkill'],
+    callout: 'Solid first serious portable backup option if the result stays modest.',
+    primary: { label: 'Check AC180 price', href: 'https://www.awin1.com/cread.php?awinmid=59271&awinaffid=2890149&ued=https%3A%2F%2Fwww.bluettipower.com%2Fproducts%2Fac180' },
+    secondary: { label: 'Read AC180 review', href: 'bluetti-ac180-review/' }
+  },
+  elite100: {
+    badge: '1kWh comparison',
+    title: 'BLUETTI Elite 100 V2',
+    fit: 'A lighter 1kWh-class option when solar input, portability, and quick emergency use matter more than long runtime.',
+    bullets: ['1,024Wh battery and 1,800W output', 'Interesting when it prices close to the AC180'],
+    callout: 'Best for buyers comparing compact 1kWh backup options.',
+    primary: { label: 'Check Elite 100 V2 price', href: 'https://www.awin1.com/cread.php?awinmid=59271&awinaffid=2890149&ued=https%3A%2F%2Fwww.bluettipower.com%2Fproducts%2Felite-100-v2-portable-power-station' },
+    secondary: { label: 'Compare vs AC180', href: 'bluetti-elite-100-v2-vs-ac180/' }
+  },
+  ankerC1000: {
+    badge: '1kWh power station',
+    title: 'Anker SOLIX C1000 Gen 2',
+    fit: 'Strong for compact outage coverage, portable work power, and readers who want high output without jumping to a heavy 2kWh unit.',
+    bullets: ['1,024Wh battery and 2,000W AC output', 'Good for light home backup, RV weekends, and small off-grid use'],
+    callout: 'One of the better compact picks when output matters more than maximum runtime.',
+    primary: { label: 'Check C1000 Gen 2 price', href: 'https://ankersolix.pxf.io/L0214L' },
+    secondary: { label: 'Read C1000 Gen 2 review', href: 'anker-solix-c1000-gen-2-review/' }
+  },
+  ankerC2000: {
+    badge: '2kWh backup',
+    title: 'Anker SOLIX C2000 Gen 2',
+    fit: 'Better for meaningful backup loads, RV power, storm prep, and readers who outgrew the 1kWh class.',
+    bullets: ['2,048Wh battery and 2,400W AC output', 'Expandable and better suited to selected home outage loads'],
+    callout: 'A strong middle ground before stepping into fixed installed backup.',
+    primary: { label: 'Check C2000 Gen 2 price', href: 'https://ankersolix.pxf.io/QYbX4M' },
+    secondary: { label: 'Read C2000 Gen 2 review', href: 'anker-solix-c2000-gen-2-review/' }
+  },
+  elite200: {
+    badge: '2kWh backup',
+    title: 'BLUETTI Elite 200 V2',
+    fit: 'A solid 2kWh-class alternative for readers who need more runtime for outage essentials and portable backup.',
+    bullets: ['2,073.6Wh battery and 2,600W AC output', 'Good when runtime matters more than a compact form factor'],
+    callout: 'Useful side-by-side comparison against the Anker C2000 tier.',
+    primary: { label: 'Check Elite 200 V2 price', href: 'https://www.awin1.com/cread.php?awinmid=59271&awinaffid=2890149&ued=https%3A%2F%2Fwww.bluettipower.com%2Fproducts%2Felite-200-v2-portable-power-station' },
+    secondary: { label: 'Read Elite 200 V2 review', href: 'bluetti-elite-200-v2-review/' }
+  }
+};
+
+function productCard(id, overrides = {}) {
+  const base = recommendationCatalog[id];
+  if (!base) return null;
+  return {
+    ...base,
+    ...overrides,
+    bullets: overrides.bullets || [...(base.bullets || [])],
+    primary: { ...(base.primary || {}), ...(overrides.primary || {}) },
+    secondary: overrides.secondary === null
+      ? undefined
+      : ((base.secondary || overrides.secondary) ? { ...(base.secondary || {}), ...(overrides.secondary || {}) } : undefined)
+  };
+}
+
+function uniqueProducts(cards = []) {
+  const seen = new Set();
+  return cards.filter(card => {
+    if (!card || !card.title) return false;
+    if (seen.has(card.title)) return false;
+    seen.add(card.title);
+    return true;
+  });
+}
+
+function homeSolarRecommendations({ roundedKw, batteryKwh, inverterW }) {
+  const cards = [productCard('equipmentGuide', { recommended: true })];
+  if (batteryKwh >= 5 || roundedKw >= 4.5 || inverterW >= 5000) {
+    cards.push(productCard('homeSizingGuide', { recommended: true }));
+  } else {
+    cards.push(productCard('inverterGuide', {
+      badge: 'Planning guide',
+      fit: 'Useful if you want to understand inverter and backup implications before comparing larger home-solar gear.'
+    }));
+  }
+  return uniqueProducts(cards);
+}
+
+function offGridRecommendations({ arrayW, batteryKwh, inverterW, voltage }) {
+  if (voltage === '12V' && arrayW <= 300 && batteryKwh <= 1.35 && inverterW <= 1200) {
+    return uniqueProducts([
+      productCard('renogyStarter', { recommended: true }),
+      productCard('renogyBattery', { recommended: true }),
+      productCard('cabinGuide')
+    ]);
+  }
+  if (arrayW <= 700 && batteryKwh <= 1.8 && inverterW <= 2000) {
+    return uniqueProducts([
+      productCard('ankerC1000', { recommended: true }),
+      productCard('cabinGuide'),
+      productCard('renogyStarter')
+    ]);
+  }
+  if (batteryKwh <= 3.2 && inverterW <= 2600) {
+    return uniqueProducts([
+      productCard('ankerC2000', { recommended: true }),
+      productCard('elite200', { recommended: true }),
+      productCard('cabinGuide')
+    ]);
+  }
+  return uniqueProducts([
+    productCard('equipmentGuide', {
+      recommended: true,
+      badge: 'Larger-system path',
+      fit: 'This result is pushing beyond simple starter kits, so category-level comparison is more useful than a small product recommendation.',
+      primary: { label: 'Browse equipment page', href: 'equipment/' },
+      secondary: { label: 'Read inverter guide', href: 'inverter-size-calculator/' }
+    }),
+    productCard('cabinGuide')
+  ]).slice(0, 3);
+}
+
+function backupRecommendations({ portable, batteryKwh, inverterW, hours, solar }) {
+  if (!portable) {
+    return uniqueProducts([
+      productCard('equipmentGuide', {
+        recommended: true,
+        badge: 'Installed backup path',
+        fit: 'This result points toward larger home backup gear instead of a typical portable station.'
+      }),
+      productCard('inverterGuide')
+    ]);
+  }
+  if (batteryKwh <= 1.2 && inverterW <= 1800 && hours <= 12) {
+    return uniqueProducts([
+      productCard('ac180', { recommended: true }),
+      productCard('ankerC1000', { recommended: true }),
+      productCard('elite100')
+    ]);
+  }
+  if (batteryKwh <= 2.6 && inverterW <= 2400 && hours <= 24) {
+    return uniqueProducts([
+      productCard('ankerC2000', { recommended: true }),
+      productCard('elite200', { recommended: true }),
+      solar ? productCard('equipmentGuide', { badge: 'Buying path' }) : productCard('inverterGuide', { badge: 'Backup planning' })
+    ]);
+  }
+  return uniqueProducts([
+    productCard('equipmentGuide', {
+      recommended: true,
+      badge: 'Compare backup categories',
+      fit: 'This result is close enough to larger backup territory that a category-level comparison is safer than a narrow product push.'
+    }),
+    productCard('ankerC2000'),
+    productCard('elite200')
+  ]);
+}
+
+function evRecommendations() {
+  return uniqueProducts([
+    productCard('equipmentGuide', {
+      recommended: true,
+      fit: 'Most EV-charging solar decisions still start with the house-side solar plan, not a gadget purchase.'
+    }),
+    productCard('homeSizingGuide', {
+      badge: 'Home solar path',
+      recommended: true,
+      fit: 'Useful if this EV result is making you think about a broader home solar upgrade.'
+    })
+  ]);
+}
+
 function loadStats(rows) {
   const activeRows = rows.filter(r => r.watts > 0 && r.hours > 0 && r.duty > 0);
   const dailyWh = rows.reduce((sum, r) => sum + (r.watts * r.duty * r.hours), 0);
@@ -289,26 +513,7 @@ function calculateBill() {
     ], [
       { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
       { label: 'Learn home solar basics', href: 'solar-power-system-basics/' }
-    ], [
-      {
-        badge: 'Best next step',
-        title: 'Home solar gear categories',
-        fit: 'Start here if this result points you toward a larger rooftop or hybrid system rather than a small off-grid kit.',
-        bullets: ['See how to compare panels, batteries, inverters, and system classes', 'Better for narrowing the type of gear before chasing individual products'],
-        callout: 'Use this when you need the right class of system before comparing brands.',
-        primary: { label: 'Browse equipment page', href: 'equipment/' },
-        secondary: { label: 'Read solar basics', href: 'solar-power-system-basics/' }
-      },
-      {
-        badge: 'Sizing guide',
-        title: 'Home solar sizing guide',
-        fit: 'Use this if you want a little more context before comparing installed-system gear.',
-        bullets: ['Good follow-up for bill-based or appliance-list home estimates', 'Helps frame array size, inverter class, and battery expectations'],
-        callout: 'Useful when you want to sanity-check the size range before shopping.',
-        primary: { label: 'Read sizing guide', href: 'solar-kit-size-calculator/' },
-        secondary: { label: 'See equipment categories', href: 'equipment/' }
-      }
-    ]);
+    ], homeSolarRecommendations({ roundedKw, batteryKwh: battery.kwh, inverterW }));
     setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, batteryKwh: battery.kwh, inverterW, voltage });
     return;
   }
@@ -339,26 +544,7 @@ function calculateBill() {
   ], [
     { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
     { label: 'Read home solar guide', href: 'solar-kit-size-calculator/' }
-  ], [
-    {
-      badge: 'Best next step',
-      title: 'Home solar gear categories',
-      fit: 'Start here if you want to turn this bill-based result into realistic equipment categories.',
-      bullets: ['Compare hybrid vs grid-tie paths', 'See what kind of battery and inverter class fits this size tier'],
-      callout: 'Better for narrowing your options before you compare specific products.',
-      primary: { label: 'Browse equipment page', href: 'equipment/' },
-      secondary: { label: 'Read home solar guide', href: 'solar-kit-size-calculator/' }
-    },
-    {
-      badge: 'Buying path',
-      title: 'Solar basics before you buy',
-      fit: 'Use this if you want the plain-English version before comparing home solar gear.',
-      bullets: ['Panels, batteries, inverters, and system types explained', 'Useful if you are still deciding between basic grid-tie and hybrid backup'],
-      callout: 'Helpful when you want the concepts to feel less abstract before shopping.',
-      primary: { label: 'Read solar basics', href: 'solar-power-system-basics/' },
-      secondary: { label: 'Browse gear categories', href: 'equipment/' }
-    }
-  ]);
+  ], homeSolarRecommendations({ roundedKw, batteryKwh: battery.kwh, inverterW }));
   setVisualPlan({ mode: 'bill', arrayW: roundedKw * 1000, batteryKwh: battery.kwh, inverterW, voltage });
 }
 
@@ -400,26 +586,7 @@ function calculateEV() {
   ], [
     { label: 'Browse home solar gear', href: 'equipment/', style: 'primary' },
     { label: 'Read the EV solar guide', href: 'how-much-solar-power-do-i-need-to-charge-my-ev/' }
-  ], [
-    {
-      badge: 'Best next step',
-      title: 'Home solar gear categories',
-      fit: 'Most EV-charging solar decisions still point back to a home solar or hybrid setup rather than a small portable unit.',
-      bullets: ['Use this to compare the right equipment class for added solar production', 'Good for deciding whether battery storage even matters for your EV goal'],
-      callout: 'EV charging usually starts with the house-side solar plan, not a gadget purchase.',
-      primary: { label: 'Browse equipment page', href: 'equipment/' },
-      secondary: { label: 'Read EV solar guide', href: 'how-much-solar-power-do-i-need-to-charge-my-ev/' }
-    },
-    {
-      badge: 'Foundational guide',
-      title: 'Solar basics before comparing gear',
-      fit: 'Use this if you need a cleaner mental model before moving into equipment choices.',
-      bullets: ['Explains the parts of a solar system in plain English', 'Helps make EV add-on sizing feel less disconnected from the rest of the system'],
-      callout: 'Good if you are early and still translating the math into buying decisions.',
-      primary: { label: 'Read solar basics', href: 'solar-power-system-basics/' },
-      secondary: { label: 'Browse gear categories', href: 'equipment/' }
-    }
-  ]);
+  ], evRecommendations());
   setVisualPlan({ mode: 'ev', arrayW: roundedKw * 1000, inverterW: roundedKw * 1000, voltage: systemVoltage(roundedKw * 1000, roundedKw * 1000), solar: true });
 }
 
@@ -485,26 +652,7 @@ function calculateLoad() {
   ], [
     { label: 'See cabin/off-grid kit ideas', href: 'best-solar-kits-for-cabins/', style: 'primary' },
     { label: 'Browse equipment categories', href: 'equipment/' }
-  ], [
-    {
-      badge: 'Starter kit path',
-      title: 'Best solar kits for cabins and tiny homes',
-      fit: 'Strong next click if this result is for a cabin, RV, shed, or small off-grid build and you want realistic kit classes.',
-      bullets: ['Compare system tiers instead of random starter kits', 'Good for matching your result to a more realistic buying range'],
-      callout: 'This is the best “what should I shop next?” page for most off-grid results.',
-      primary: { label: 'See kit comparisons', href: 'best-solar-kits-for-cabins/' },
-      secondary: { label: 'Browse equipment page', href: 'equipment/' }
-    },
-    {
-      badge: 'Beginner kit example',
-      title: 'Renogy 200W 12V starter kit review',
-      fit: 'Useful if your loads are small and you want to see what an entry-level kit can and cannot realistically do.',
-      bullets: ['Better for light-duty loads than full cabin or heavy inverter use', 'Helps readers avoid assuming a starter kit can run more than it really can'],
-      callout: 'Good reality check before buying a small 12V kit.',
-      primary: { label: 'Read Renogy review', href: 'renogy-200w-12v-starter-kit-review/' },
-      secondary: { label: 'See cabin kit tiers', href: 'best-solar-kits-for-cabins/' }
-    }
-  ]);
+  ], offGridRecommendations({ arrayW, batteryKwh, inverterW, voltage }));
   setVisualPlan({ mode: 'load', arrayW, batteryKwh, inverterW, voltage });
 }
 
@@ -544,45 +692,7 @@ function calculateBackup() {
   ] : [
     { label: 'Browse home backup gear', href: 'equipment/', style: 'primary' },
     { label: 'Read inverter sizing guide', href: 'inverter-size-calculator/' }
-  ], portable ? [
-    {
-      badge: 'Portable backup fit',
-      title: 'BLUETTI Elite 200 V2 review',
-      fit: 'Good next click if this backup result still looks portable-power-station sized and you want more runtime than a 1kWh unit.',
-      bullets: ['Useful for outage essentials, RV use, and selected home loads', 'Better fit when you need more runtime but not a full installed system'],
-      callout: 'One of the stronger “serious but still portable” backup options on the site.',
-      primary: { label: 'Read Elite 200 V2 review', href: 'bluetti-elite-200-v2-review/' },
-      secondary: { label: 'Browse equipment page', href: 'equipment/' }
-    },
-    {
-      badge: 'Alternative pick',
-      title: 'Anker SOLIX C2000 Gen 2 review',
-      fit: 'Another strong next click if you want a 2kWh-class backup option to compare side by side.',
-      bullets: ['Worth comparing for output, runtime, and storm-prep use', 'Good when you are narrowing down portable backup instead of building from components'],
-      callout: 'Useful comparison page if you are cross-shopping larger portable stations.',
-      primary: { label: 'Read Anker C2000 review', href: 'anker-solix-c2000-gen-2-review/' },
-      secondary: { label: 'Compare backup gear', href: 'equipment/' }
-    }
-  ] : [
-    {
-      badge: 'Installed backup path',
-      title: 'Home backup gear categories',
-      fit: 'Better next click if your result outgrew portable stations and now points toward a larger inverter/battery setup.',
-      bullets: ['Use this to narrow the equipment class before comparing brands', 'Good for sorting battery, inverter, and system-type decisions'],
-      callout: 'This is usually the better path once pumps, AC, or longer runtimes enter the picture.',
-      primary: { label: 'Browse equipment page', href: 'equipment/' },
-      secondary: { label: 'Read inverter guide', href: 'inverter-size-calculator/' }
-    },
-    {
-      badge: 'Sizing help',
-      title: 'Inverter size guide',
-      fit: 'Useful if the main question is whether surge loads or running watts are pushing you into a larger system.',
-      bullets: ['Helps explain why backup systems jump in price and complexity', 'Good before comparing inverters or hybrid backup hardware'],
-      callout: 'Best follow-up when the inverter class is the part that surprised you.',
-      primary: { label: 'Read inverter guide', href: 'inverter-size-calculator/' },
-      secondary: { label: 'Browse gear categories', href: 'equipment/' }
-    }
-  ]);
+  ], backupRecommendations({ portable, batteryKwh, inverterW, hours, solar: Boolean(solar) }));
   setVisualPlan({ mode: 'backup', arrayW, batteryKwh, inverterW, voltage: portable ? '24V' : '48V', solar: Boolean(solar) });
 }
 
